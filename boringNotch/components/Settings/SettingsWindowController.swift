@@ -31,7 +31,7 @@ class SettingsWindowController: NSWindowController {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func setUpdaterController(_ controller: SPUStandardUpdaterController) {
+    func setUpdaterController(_ controller: SPUStandardUpdaterController?) {
         self.updaterController = controller
         // Recreate the content view with the proper updater controller
         setupWindow()

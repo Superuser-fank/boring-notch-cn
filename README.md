@@ -6,6 +6,9 @@
   <br>
 </h1>
 
+> [!NOTE]
+> This is a fork of **Boring Notch** with added NetEase Cloud Music support. It is not an official release from TheBoredTeam. The project remains GPLv3; published binaries should link to the corresponding source code.
+
 
 <p align="center">
   <a title="Crowdin" target="_blank" href="https://crowdin.com/project/boring-notch"><img src="https://badges.crowdin.net/boring-notch/localized.svg"></a>
@@ -187,5 +190,4 @@ For a full list of licenses and attributions, please see the [Third-Party Licens
 
 - **SwiftUI**: For making us look like coding wizards.
 - **You**: For being awesome and checking out **boring.notch**!
-
 

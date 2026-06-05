@@ -128,6 +128,8 @@ extension MediaControllerType {
             return "Connects directly to the Spotify app."
         case .appleMusic:
             return "Connects directly to the Apple Music app."
+        case .netEaseMusic:
+            return "Uses macOS Now Playing data from NetEase Cloud Music for basic playback controls."
         case .youtubeMusic:
             return "Requires a third-party client with API plugin enabled."
         }

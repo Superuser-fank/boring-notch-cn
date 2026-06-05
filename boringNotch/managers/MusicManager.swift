@@ -129,6 +129,8 @@ class MusicManager: ObservableObject {
             newController = AppleMusicController()
         case .spotify:
             newController = SpotifyController()
+        case .netEaseMusic:
+            newController = NetEaseMusicController()
         case .youtubeMusic:
             newController = YouTubeMusicController()
         }
