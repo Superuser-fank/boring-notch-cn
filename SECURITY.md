@@ -2,10 +2,13 @@
 
 ## Reporting a Vulnerability
 
-The Bored Team and community take security bugs in Boring Notch seriously. We appreciate your efforts to responsibly disclose your findings, and will make every effort to acknowledge your contributions.
+Boring Notch CN is a non-official fork of Boring Notch. Security reports for this fork should be reported to this repository, not to the upstream Boring Notch project or any third-party media service.
 
-To report a security issue, please use the GitHub Security Advisory ["Report a Vulnerability"](https://github.com/TheBoredTeam/boring.notch/security/advisories/new) tab.
+To report a security issue in Boring Notch CN, please use this repository's GitHub Issues or Security Advisory feature:
 
-The Bored Team will send a response indicating the next steps in handling your report. After the initial reply to your report, we will keep you informed of the progress towards a fix and full announcement, and may ask for additional information or guidance.
+- Repository: <https://github.com/Superuser-fank/boringnotch-netease>
+- Issues: <https://github.com/Superuser-fank/boringnotch-netease/issues>
 
-Report security bugs in third-party dependencies to the person or team maintaining the package or dependency.
+Please do not include public exploit details in an issue before the maintainer has had a chance to respond.
+
+Report security bugs in upstream Boring Notch, third-party dependencies, or third-party media services to their respective maintainers.

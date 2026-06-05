@@ -3,7 +3,7 @@ set -euo pipefail
 
 REPO_NAME="${REPO_NAME:-boringnotch-netease}"
 VISIBILITY="${VISIBILITY:-public}"
-TAG="${TAG:-v2.7.3-cn.1}"
+TAG="${TAG:-v2.7.3-cn.2}"
 BRANCH="${BRANCH:-netease-cloud-music}"
 DMG_PATH="${DMG_PATH:-dist/BoringNotchCN-2.7.3-unnotarized.dmg}"
 REMOTE_NAME="${REMOTE_NAME:-publish}"
@@ -65,7 +65,7 @@ xattr -dr com.apple.quarantine "/Applications/Boring Notch CN.app"
 ### 开源与合规
 
 - 许可证：GPLv3。完整许可证见 `LICENSE`。
-- 对应源码：<https://github.com/Superuser-fank/boringnotch-netease>
+- 对应源码：<https://github.com/Superuser-fank/boringnotch-netease/tree/v2.7.3-cn.2>
 - 第三方声明：见 `THIRD_PARTY_NOTICES.md` 和 `THIRD_PARTY_LICENSES`。
 - 这是非官方 fork，不是 TheBoredTeam 官方发布。
 - 网易云音乐、Apple Music、Spotify、YouTube Music 等名称仅用于说明兼容的媒体来源；本项目与这些第三方服务没有从属、授权、背书或赞助关系。

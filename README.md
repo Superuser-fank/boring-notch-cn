@@ -58,7 +58,7 @@ DEVELOPMENT_TEAM=YOURTEAMID UNNOTARIZED=1 ./scripts/build_release.sh
 本项目基于 Boring Notch 修改，继续遵循 GPLv3 发布。
 
 - GPLv3 许可证全文：[LICENSE](./LICENSE)
-- 对应源码：<https://github.com/Superuser-fank/boringnotch-netease>
+- 对应源码：<https://github.com/Superuser-fank/boringnotch-netease/tree/v2.7.3-cn.2>
 - 第三方声明：[THIRD_PARTY_NOTICES.md](./THIRD_PARTY_NOTICES.md)
 - 第三方许可证原文：[THIRD_PARTY_LICENSES](./THIRD_PARTY_LICENSES)
 

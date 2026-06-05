@@ -80,7 +80,7 @@ DEVELOPMENT_TEAM=YOURTEAMID NOTARIZE=1 NOTARY_PROFILE=boringnotch-cn ./scripts/b
 示例：
 
 ```bash
-TAG=v2.7.3-cn.1 ./scripts/publish_github.sh
+TAG=v2.7.3-cn.2 ./scripts/publish_github.sh
 ```
 
 ## Sparkle 更新

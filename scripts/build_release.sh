@@ -52,6 +52,9 @@ mkdir -p "$BUILD_ROOT" "$DIST_DIR"
   printf 'DEVELOPMENT_TEAM = %s\n' "$DEVELOPMENT_TEAM"
   printf 'CODE_SIGN_IDENTITY = %s\n' "$CODE_SIGN_IDENTITY"
   printf 'CODE_SIGN_IDENTITY[sdk=macosx*] = %s\n' "$CODE_SIGN_IDENTITY"
+  printf 'CODE_SIGN_STYLE = Manual\n'
+  printf 'PROVISIONING_PROFILE_SPECIFIER =\n'
+  printf 'PROVISIONING_PROFILE =\n'
 } > "$SIGNING_XCCONFIG"
 
 if [ "$UNNOTARIZED" = "1" ]; then
