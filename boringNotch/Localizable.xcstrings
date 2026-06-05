@@ -22339,8 +22339,8 @@
         },
         "zh-Hans": {
           "stringUnit": {
-            "state": "needs_review",
-            "value": "View on GitHub: pear-devs/pear-desktop"
+            "state": "translated",
+            "value": "在 GitHub 查看：pear-devs/pear-desktop"
           }
         }
       }
@@ -23981,6 +23981,196 @@
           "stringUnit": {
             "state": "needs_review",
             "value": "• 新功能1"
+          }
+        }
+      }
+    },
+    "Enable Camera Access": {
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "启用摄像头权限"
+          }
+        }
+      }
+    },
+    "Boring Notch includes a mirror feature that lets you quickly check your appearance using your camera, right from the notch. Camera access is required only to show this live preview. You can turn the mirror feature on or off at any time in the app.": {
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Boring Notch CN 包含镜子功能，可直接在刘海中通过摄像头快速查看自己。摄像头权限仅用于显示实时预览，你可以随时在应用中开启或关闭镜子功能。"
+          }
+        }
+      }
+    },
+    "Your camera is never used without your consent, and nothing is recorded or stored.": {
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "未经你同意不会使用摄像头，也不会录制或存储任何内容。"
+          }
+        }
+      }
+    },
+    "Enable Calendar Access": {
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "启用日历权限"
+          }
+        }
+      }
+    },
+    "Boring Notch can show all your upcoming events in one place. Access to your calendar is needed to display your schedule.": {
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Boring Notch CN 可以集中显示即将到来的日程。需要日历权限才能显示你的日程安排。"
+          }
+        }
+      }
+    },
+    "Your calendar data is only used to show your events and is never shared.": {
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "你的日历数据仅用于显示日程，不会被共享。"
+          }
+        }
+      }
+    },
+    "Enable Reminders Access": {
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "启用提醒事项权限"
+          }
+        }
+      }
+    },
+    "Boring Notch can show your scheduled reminders alongside your calendar events. Access to Reminders is needed to display your reminders.": {
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Boring Notch CN 可以把提醒事项和日历事件一起显示。需要提醒事项权限才能显示你的提醒。"
+          }
+        }
+      }
+    },
+    "Your reminders data is only used to show your reminders and is never shared.": {
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "你的提醒事项数据仅用于显示提醒，不会被共享。"
+          }
+        }
+      }
+    },
+    "Enable Accessibility Access": {
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "启用辅助功能权限"
+          }
+        }
+      }
+    },
+    "Accessibility access is required to replace system notifications with the Boring Notch HUD. This allows the app to intercept media and brightness events to display custom HUD overlays.": {
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "需要辅助功能权限才能用 Boring Notch CN HUD 替换系统提示。该权限用于拦截媒体和亮度事件，并显示自定义 HUD 浮层。"
+          }
+        }
+      }
+    },
+    "Accessibility access is used only to improve media and brightness notifications. No data is collected or shared.": {
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "辅助功能权限仅用于改进媒体和亮度提示，不会收集或共享任何数据。"
+          }
+        }
+      }
+    },
+    "Works with most media apps, including browsers, to detect what's playing. Note: This may be removed in a future macOS version.": {
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "兼容大多数媒体应用，包括浏览器，用于识别正在播放的内容。注意：未来 macOS 版本可能移除此能力。"
+          }
+        }
+      }
+    },
+    "Connects directly to the Spotify app.": {
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "直接连接 Spotify 应用。"
+          }
+        }
+      }
+    },
+    "Connects directly to the Apple Music app.": {
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "直接连接 Apple Music 应用。"
+          }
+        }
+      }
+    },
+    "Uses macOS Now Playing data from NetEase Cloud Music for basic playback controls.": {
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "使用 macOS“正在播放”中的网易云音乐数据，提供基础播放控制。"
+          }
+        }
+      }
+    },
+    "Requires a third-party client with API plugin enabled.": {
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "需要启用 API 插件的第三方客户端。"
+          }
+        }
+      }
+    },
+    "Circular": {
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "圆形"
+          }
+        }
+      }
+    },
+    "Rectangular": {
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "矩形"
           }
         }
       }

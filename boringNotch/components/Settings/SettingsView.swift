@@ -289,10 +289,7 @@ struct GeneralSettings: View {
                     HStack {
                         Text("Gesture sensitivity")
                         Spacer()
-                        Text(
-                            Defaults[.gestureSensitivity] == 100
-                                ? "High" : Defaults[.gestureSensitivity] == 200 ? "Medium" : "Low"
-                        )
+                        Text(LocalizedStringKey(gestureSensitivityLabel))
                         .foregroundStyle(.secondary)
                     }
                 }
@@ -339,6 +336,11 @@ struct GeneralSettings: View {
         } header: {
             Text("Notch behavior")
         }
+    }
+
+    private var gestureSensitivityLabel: String {
+        Defaults[.gestureSensitivity] == 100
+            ? "High" : Defaults[.gestureSensitivity] == 200 ? "Medium" : "Low"
     }
 }
 
@@ -1717,7 +1719,7 @@ struct AccentCircleButton: View {
             }
         }
         .buttonStyle(.plain)
-        .help(isSystemDefault ? "Use your macOS system accent color" : "")
+        .help(isSystemDefault ? NSLocalizedString("Use your macOS system accent color", comment: "") : "")
     }
 }
 
@@ -1783,9 +1785,9 @@ func warningBadge(_ text: String, _ description: String) -> some View {
                 .font(.system(size: 22))
                 .foregroundStyle(.yellow)
             VStack(alignment: .leading) {
-                Text(text)
+                Text(LocalizedStringKey(text))
                     .font(.headline)
-                Text(description)
+                Text(LocalizedStringKey(description))
                     .foregroundStyle(.secondary)
             }
             Spacer()
