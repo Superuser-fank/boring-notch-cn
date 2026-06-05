@@ -1,74 +1,92 @@
-# Release Guide
+# 发布指南
 
-This fork supports two distribution modes:
+本文说明如何构建和发布 `Boring Notch CN`。
 
-- Unnotarized DMG, similar to the current upstream Boring Notch distribution.
-- Developer ID signed and notarized DMG for standard public distribution.
+## 发布原则
 
-## Requirements
+- App 和 DMG 的主品牌名使用 `Boring Notch CN`，不把任何第三方服务名称放进主品牌。
+- GitHub 源码仓库保持公开，满足 GPLv3 对应源码分发要求。
+- Release 页面必须明确 GPLv3、源码链接、第三方声明和非官方 fork 身份。
+- 网易云音乐等名称只在“支持的媒体来源”或第三方声明中出现。
 
-- Xcode installed at `/Applications/Xcode.app`.
-- A public source repository for GPLv3 compliance.
+## 构建要求
 
-For unnotarized distribution, an `Apple Development` certificate is enough. Users will need to bypass Gatekeeper manually.
+- Xcode 位于 `/Applications/Xcode.app`。
+- 公开源码仓库：<https://github.com/Superuser-fank/boringnotch-netease>
+- 本地有可用代码签名证书。
 
-For standard public distribution, use a paid Apple Developer Program account with a `Developer ID Application` certificate and notarization.
+未 notarize 分发只需要 Apple Development 证书，但用户首次打开可能需要手动移除 quarantine。
 
-## Build A DMG
+标准公开分发建议使用付费 Apple Developer Program、Developer ID Application 证书，并完成 notarization。
 
-Find your team ID:
+## 构建未 notarize DMG
+
+查看 Team ID：
 
 ```bash
 security find-identity -v -p codesigning
 ```
 
-Build an unnotarized DMG:
+构建：
 
 ```bash
 DEVELOPMENT_TEAM=YOURTEAMID UNNOTARIZED=1 ./scripts/build_release.sh
 ```
 
-The DMG is written to `dist/`.
+DMG 会输出到 `dist/`，默认文件名类似：
 
-Users should install the app, then run:
-
-```bash
-xattr -dr com.apple.quarantine "/Applications/Boring Notch NetEase.app"
+```text
+BoringNotchCN-2.7.3-unnotarized.dmg
 ```
 
-This matches the practical distribution model used by upstream Boring Notch, but it is not a formal Developer ID release.
+用户安装后如被 Gatekeeper 拦截，可执行：
 
-## Build A Developer ID DMG
+```bash
+xattr -dr com.apple.quarantine "/Applications/Boring Notch CN.app"
+```
 
-Build a Developer ID signed DMG:
+## 构建 Developer ID DMG
 
 ```bash
 DEVELOPMENT_TEAM=YOURTEAMID ./scripts/build_release.sh
 ```
 
-The DMG is written to `dist/`.
-
 ## Notarize
 
-Recommended: store notary credentials once in Keychain:
+推荐先把 notary 凭据保存到 Keychain：
 
 ```bash
-xcrun notarytool store-credentials boringnotch-netease \
+xcrun notarytool store-credentials boringnotch-cn \
   --apple-id "you@example.com" \
   --team-id "YOURTEAMID" \
   --password "app-specific-password"
 ```
 
-Then build, notarize, and staple:
+然后构建、提交 notarization 并 staple：
 
 ```bash
-DEVELOPMENT_TEAM=YOURTEAMID NOTARIZE=1 NOTARY_PROFILE=boringnotch-netease ./scripts/build_release.sh
+DEVELOPMENT_TEAM=YOURTEAMID NOTARIZE=1 NOTARY_PROFILE=boringnotch-cn ./scripts/build_release.sh
 ```
 
-## Sparkle Updates
+## GitHub Release
 
-Automatic updates are disabled until this fork has its own Sparkle appcast and EdDSA key. Do not reuse the upstream Boring Notch appcast or public key.
+发布脚本会：
+
+- 推送当前分支。
+- 创建或更新 tag。
+- 上传 DMG。
+- 写入 Release notes，包含 GPLv3、源码链接和第三方声明。
+
+示例：
+
+```bash
+TAG=v2.7.3-cn.1 ./scripts/publish_github.sh
+```
+
+## Sparkle 更新
+
+自动更新目前保持禁用，直到本 fork 拥有自己的 Sparkle appcast 和 EdDSA key。不要复用上游 Boring Notch 的 appcast 或 public key。
 
 ## GPLv3
 
-This project is based on Boring Notch and remains GPLv3. If you distribute binaries, also provide the corresponding source code, keep the license notices, and keep third-party attributions.
+本项目基于 Boring Notch 修改，继续遵循 GPLv3。分发二进制时必须提供对应源码、保留许可证声明，并保留第三方项目的许可和署名。

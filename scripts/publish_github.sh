@@ -3,9 +3,9 @@ set -euo pipefail
 
 REPO_NAME="${REPO_NAME:-boringnotch-netease}"
 VISIBILITY="${VISIBILITY:-public}"
-TAG="${TAG:-v2.7.3-netease.1}"
+TAG="${TAG:-v2.7.3-cn.1}"
 BRANCH="${BRANCH:-netease-cloud-music}"
-DMG_PATH="${DMG_PATH:-dist/BoringNotchNetEase-2.7.3-unnotarized.dmg}"
+DMG_PATH="${DMG_PATH:-dist/BoringNotchCN-2.7.3-unnotarized.dmg}"
 REMOTE_NAME="${REMOTE_NAME:-publish}"
 
 if ! command -v gh >/dev/null 2>&1; then
@@ -32,7 +32,7 @@ OWNER="$(gh api user --jq .login)"
 REPO_FULL_NAME="$OWNER/$REPO_NAME"
 
 if ! gh repo view "$REPO_FULL_NAME" >/dev/null 2>&1; then
-  gh repo create "$REPO_FULL_NAME" "--$VISIBILITY" --source . --remote "$REMOTE_NAME" --description "Boring Notch fork with NetEase Cloud Music support"
+  gh repo create "$REPO_FULL_NAME" "--$VISIBILITY" --source . --remote "$REMOTE_NAME" --description "Boring Notch CN fork with additional media-source support"
 elif ! git remote get-url "$REMOTE_NAME" >/dev/null 2>&1; then
   git remote add "$REMOTE_NAME" "https://github.com/$REPO_FULL_NAME.git"
 fi
@@ -48,31 +48,34 @@ git push -f "$REMOTE_NAME" "$TAG"
 
 RELEASE_NOTES="$(mktemp)"
 cat > "$RELEASE_NOTES" <<'NOTES'
-## Boring Notch NetEase
+## Boring Notch CN
 
-This is a fork of Boring Notch with NetEase Cloud Music support.
+Boring Notch CN 是 Boring Notch 的公开源码 fork，主品牌名不使用任何第三方服务名称。本版本增加了中文设置本地化，并在媒体来源中提供网易云音乐支持。
 
-### Install
+### 安装
 
-1. Download `BoringNotchNetEase-2.7.3-unnotarized.dmg`.
-2. Open the DMG and drag `Boring Notch NetEase.app` to `/Applications`.
-3. Because this build is not notarized, run:
+1. 下载 `BoringNotchCN-2.7.3-unnotarized.dmg`。
+2. 打开 DMG，把 `Boring Notch CN.app` 拖到 `/Applications`。
+3. 这个构建已签名但未 notarize，如首次打开被 Gatekeeper 拦截，可执行：
 
 ```bash
-xattr -dr com.apple.quarantine "/Applications/Boring Notch NetEase.app"
+xattr -dr com.apple.quarantine "/Applications/Boring Notch CN.app"
 ```
 
-### Notes
+### 开源与合规
 
-- This is not an official TheBoredTeam release.
-- The app is Apple Development signed, not Developer ID notarized.
-- Source code is provided under GPLv3.
+- 许可证：GPLv3。完整许可证见 `LICENSE`。
+- 对应源码：<https://github.com/Superuser-fank/boringnotch-netease>
+- 第三方声明：见 `THIRD_PARTY_NOTICES.md` 和 `THIRD_PARTY_LICENSES`。
+- 这是非官方 fork，不是 TheBoredTeam 官方发布。
+- 网易云音乐、Apple Music、Spotify、YouTube Music 等名称仅用于说明兼容的媒体来源；本项目与这些第三方服务没有从属、授权、背书或赞助关系。
+- 当前 DMG 为 Apple Development 签名，未进行 Developer ID notarization。
 NOTES
 
 if gh release view "$TAG" --repo "$REPO_FULL_NAME" >/dev/null 2>&1; then
   gh release upload "$TAG" "$DMG_PATH" --repo "$REPO_FULL_NAME" --clobber
 else
-  gh release create "$TAG" "$DMG_PATH" --repo "$REPO_FULL_NAME" --title "Boring Notch NetEase 2.7.3" --notes-file "$RELEASE_NOTES"
+  gh release create "$TAG" "$DMG_PATH" --repo "$REPO_FULL_NAME" --title "Boring Notch CN 2.7.3" --notes-file "$RELEASE_NOTES"
 fi
 
 echo "Published: https://github.com/$REPO_FULL_NAME/releases/tag/$TAG"

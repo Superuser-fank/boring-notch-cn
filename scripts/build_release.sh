@@ -5,8 +5,9 @@ ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 PROJECT_PATH="$ROOT_DIR/boringNotch.xcodeproj"
 TARGET_NAME="boringNotch"
 CONFIGURATION="Release"
-APP_DISPLAY_NAME="${APP_DISPLAY_NAME:-Boring Notch NetEase}"
+APP_DISPLAY_NAME="${APP_DISPLAY_NAME:-Boring Notch CN}"
 APP_BUNDLE_NAME="${APP_DISPLAY_NAME}.app"
+DMG_BASENAME="${DMG_BASENAME:-BoringNotchCN}"
 UNNOTARIZED="${UNNOTARIZED:-0}"
 if [ "$UNNOTARIZED" = "1" ]; then
   CODE_SIGN_IDENTITY="${CODE_SIGN_IDENTITY:-Apple Development}"
@@ -14,8 +15,8 @@ else
   CODE_SIGN_IDENTITY="${CODE_SIGN_IDENTITY:-Developer ID Application}"
 fi
 DEVELOPMENT_TEAM="${DEVELOPMENT_TEAM:-}"
-BUILD_ROOT="${BUILD_ROOT:-/private/tmp/boringnotch-netease-release}"
-ARCHIVE_PATH="$BUILD_ROOT/BoringNotchNetEase.xcarchive"
+BUILD_ROOT="${BUILD_ROOT:-/private/tmp/boringnotch-cn-release}"
+ARCHIVE_PATH="$BUILD_ROOT/$DMG_BASENAME.xcarchive"
 EXPORT_PATH="$BUILD_ROOT/export"
 BUILD_PRODUCTS_PATH="$BUILD_ROOT/products"
 CLONED_SOURCE_PACKAGES_DIR="${CLONED_SOURCE_PACKAGES_DIR:-$BUILD_ROOT/SourcePackages}"
@@ -98,9 +99,9 @@ fi
 
 VERSION="$(/usr/libexec/PlistBuddy -c 'Print :CFBundleShortVersionString' "$APP_PATH/Contents/Info.plist")"
 if [ "$UNNOTARIZED" = "1" ]; then
-  DMG_PATH="$DIST_DIR/BoringNotchNetEase-${VERSION}-unnotarized.dmg"
+  DMG_PATH="$DIST_DIR/${DMG_BASENAME}-${VERSION}-unnotarized.dmg"
 else
-  DMG_PATH="$DIST_DIR/BoringNotchNetEase-${VERSION}.dmg"
+  DMG_PATH="$DIST_DIR/${DMG_BASENAME}-${VERSION}.dmg"
 fi
 
 codesign --verify --deep --strict --verbose=2 "$APP_PATH"
