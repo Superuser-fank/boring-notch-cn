@@ -36,6 +36,7 @@ body:
         Settings > About)
       options:
         - Select a version
+        - v2.7.3-netease.3
         - v2.7.3-netease.2
         - v2.7.3-netease.1
     validations:
