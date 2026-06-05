@@ -2932,6 +2932,16 @@
         }
       }
     },
+    "Backward 15s": {
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "后退 15 秒"
+          }
+        }
+      }
+    },
     "Battery": {
       "localizations": {
         "ar": {
@@ -7381,7 +7391,7 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "将控制项拖到槽位上"
+            "value": "拖动一个控制按钮到槽位"
           }
         }
       }
@@ -7782,6 +7792,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "编辑布局"
+          }
+        }
+      }
+    },
+    "Empty slot": {
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "空槽位"
           }
         }
       }
@@ -9088,6 +9108,16 @@
         }
       }
     },
+    "Favorite": {
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "喜欢"
+          }
+        }
+      }
+    },
     "Files dropped on the shelf will be shared via this service": {
       "localizations": {
         "ar": {
@@ -9284,6 +9314,16 @@
           "stringUnit": {
             "state": "needs_review",
             "value": "完成"
+          }
+        }
+      }
+    },
+    "Forward 15s": {
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "前进 15 秒"
           }
         }
       }
@@ -12219,6 +12259,16 @@
         }
       }
     },
+    "Match album art": {
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "匹配专辑封面"
+          }
+        }
+      }
+    },
     "Match menu bar height": {
       "localizations": {
         "ar": {
@@ -14029,6 +14079,26 @@
         }
       }
     },
+    "Next": {
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "下一首"
+          }
+        }
+      }
+    },
+    "No Action": {
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "无操作"
+          }
+        }
+      }
+    },
     "No custom animation available": {
       "localizations": {
         "ar": {
@@ -15350,6 +15420,16 @@
         }
       }
     },
+    "Open System Settings": {
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "打开系统设置"
+          }
+        }
+      }
+    },
     "Open notch on hover": {
       "localizations": {
         "ar": {
@@ -15770,6 +15850,16 @@
         }
       }
     },
+    "Play/Pause": {
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "播放/暂停"
+          }
+        }
+      }
+    },
     "Player tinting": {
       "localizations": {
         "zh-Hans": {
@@ -15976,6 +16066,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "首选显示器"
+          }
+        }
+      }
+    },
+    "Previous": {
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "上一首"
           }
         }
       }
@@ -16996,6 +17096,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "拖出后从文件架移除"
+          }
+        }
+      }
+    },
+    "Repeat": {
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "循环播放"
           }
         }
       }
@@ -18198,6 +18308,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "快捷键"
+          }
+        }
+      }
+    },
+    "Show HUD": {
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "显示 HUD"
           }
         }
       }
@@ -19698,6 +19818,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "播放变化时显示快速预览"
+          }
+        }
+      }
+    },
+    "Shuffle": {
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "随机播放"
           }
         }
       }
@@ -22215,6 +22345,16 @@
         }
       }
     },
+    "Volume": {
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "音量"
+          }
+        }
+      }
+    },
     "Welcome": {
       "localizations": {
         "ar": {
@@ -22411,6 +22551,16 @@
           "stringUnit": {
             "state": "needs_review",
             "value": "更新内容"
+          }
+        }
+      }
+    },
+    "White": {
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "白色"
           }
         }
       }
