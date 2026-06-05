@@ -1,4 +1,4 @@
-name: Build for macOS
+name: Build Boring Notch CN
 
 on:
   push:
@@ -19,7 +19,7 @@ permissions:
 
 jobs:
   build:
-    name: Build Boring Notch
+    name: Build Boring Notch CN
     strategy:
       matrix:
         platform:
