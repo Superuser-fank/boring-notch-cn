@@ -38,7 +38,7 @@ body:
         - Select a version
         - v2.7.3-netease.3
         - v2.7.3-netease.2
-        - v2.7.3-netease.1
+        - v2.7.3-cn.1
     validations:
       required: true
   - type: input
