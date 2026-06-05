@@ -73,6 +73,7 @@ xattr -dr com.apple.quarantine "/Applications/Boring Notch CN.app"
 NOTES
 
 if gh release view "$TAG" --repo "$REPO_FULL_NAME" >/dev/null 2>&1; then
+  gh release edit "$TAG" --repo "$REPO_FULL_NAME" --title "Boring Notch CN 2.7.3" --notes-file "$RELEASE_NOTES"
   gh release upload "$TAG" "$DMG_PATH" --repo "$REPO_FULL_NAME" --clobber
 else
   gh release create "$TAG" "$DMG_PATH" --repo "$REPO_FULL_NAME" --title "Boring Notch CN 2.7.3" --notes-file "$RELEASE_NOTES"
