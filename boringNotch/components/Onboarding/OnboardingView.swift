@@ -39,9 +39,9 @@ struct OnboardingView: View {
             case .cameraPermission:
                 PermissionRequestView(
                     icon: Image(systemName: "camera.fill"),
-                    title: "Enable Camera Access",
-                    description: "Boring Notch includes a mirror feature that lets you quickly check your appearance using your camera, right from the notch. Camera access is required only to show this live preview. You can turn the mirror feature on or off at any time in the app.",
-                    privacyNote: "Your camera is never used without your consent, and nothing is recorded or stored.",
+                    title: "启用相机权限",
+                    description: "Boring Notch CN 可以在刘海中显示镜像预览，方便快速检查画面。相机权限只用于实时预览，你可以随时在应用设置中关闭镜像功能。",
+                    privacyNote: "未经你确认不会使用相机，也不会录制或保存画面。",
                     onAllow: {
                         Task {
                             await requestCameraPermission()
@@ -61,9 +61,9 @@ struct OnboardingView: View {
             case .calendarPermission:
                 PermissionRequestView(
                     icon: Image(systemName: "calendar"),
-                    title: "Enable Calendar Access",
-                    description: "Boring Notch can show all your upcoming events in one place. Access to your calendar is needed to display your schedule.",
-                    privacyNote: "Your calendar data is only used to show your events and is never shared.",
+                    title: "启用日历权限",
+                    description: "Boring Notch CN 可以在刘海中集中显示接下来的日程。需要日历权限才能读取并展示你的日程安排。",
+                    privacyNote: "日历数据只在本机用于显示日程，不会上传或分享。",
                     onAllow: {
                         Task {
                                 await requestCalendarPermission()
@@ -83,9 +83,9 @@ struct OnboardingView: View {
                 case .remindersPermission:
                     PermissionRequestView(
                         icon: Image(systemName: "checklist"),
-                        title: "Enable Reminders Access",
-                        description: "Boring Notch can show your scheduled reminders alongside your calendar events. Access to Reminders is needed to display your reminders.",
-                        privacyNote: "Your reminders data is only used to show your reminders and is never shared.",
+                        title: "启用提醒事项权限",
+                        description: "Boring Notch CN 可以把有时间的提醒事项和日程一起显示。需要提醒事项权限才能展示这些提醒。",
+                        privacyNote: "提醒事项数据只在本机用于显示提醒，不会上传或分享。",
                         onAllow: {
                             Task {
                                 await requestRemindersPermission()
@@ -105,9 +105,9 @@ struct OnboardingView: View {
             case .accessibilityPermission:
                 PermissionRequestView(
                     icon: Image(systemName: "hand.raised.fill"),
-                    title: "Enable Accessibility Access",
-                    description: "Accessibility access is required to replace system notifications with the Boring Notch HUD. This allows the app to intercept media and brightness events to display custom HUD overlays.",
-                    privacyNote: "Accessibility access is used only to improve media and brightness notifications. No data is collected or shared.",
+                    title: "启用辅助功能权限",
+                    description: "替换系统音量、亮度和媒体 HUD 需要辅助功能权限。授权后应用可以监听相关按键事件，并在刘海中显示自定义提示。",
+                    privacyNote: "辅助功能权限只用于改善媒体键和亮度/音量提示，不会收集或分享数据。",
                     onAllow: {
                         Task {
                             await requestAccessibilityPermission()
