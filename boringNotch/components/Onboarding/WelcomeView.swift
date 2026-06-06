@@ -26,10 +26,10 @@ struct WelcomeView: View {
                         .aspectRatio(contentMode: .fit)
                         .frame(width: 100, height: 100)
                         .padding(.bottom, 8)
-                    Text("Boring Notch")
+                    Text("Boring Notch CN")
                         .font(.system(.largeTitle, design: .default))
                         .fontWeight(.semibold)
-                    Text("Welcome")
+                    Text("欢迎使用")
                         .font(.title)
                         .foregroundStyle(.secondary)
                         .padding(.bottom, 30)
@@ -53,7 +53,7 @@ struct WelcomeView: View {
                     Button {
                         onGetStarted?()
                     } label: {
-                        Text("Get started")
+                        Text("开始设置")
                             .padding(.horizontal, 20)
                             .padding(.vertical, 6)
                     }

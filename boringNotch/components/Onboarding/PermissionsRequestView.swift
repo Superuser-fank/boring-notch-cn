@@ -46,9 +46,9 @@ struct PermissionRequestView: View {
             }
 
             HStack {
-                Button("Not Now") { onSkip() }
+                Button("暂不设置") { onSkip() }
                     .buttonStyle(.bordered)
-                Button("Allow Access") { onAllow() }
+                Button("允许访问") { onAllow() }
                     .buttonStyle(.borderedProminent)
             }
             .padding(.top, 10)

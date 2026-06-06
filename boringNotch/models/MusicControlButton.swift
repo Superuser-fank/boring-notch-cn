@@ -47,25 +47,25 @@ enum MusicControlButton: String, CaseIterable, Identifiable, Codable, Defaults.S
     var label: String {
         switch self {
         case .shuffle:
-            return "Shuffle"
+            return "随机播放"
         case .previous:
-            return "Previous"
+            return "上一首"
         case .playPause:
-            return "Play/Pause"
+            return "播放/暂停"
         case .next:
-            return "Next"
+            return "下一首"
         case .repeatMode:
-            return "Repeat"
+            return "循环"
         case .volume:
-            return "Volume"
+            return "音量"
         case .favorite:
-            return "Favorite"
+            return "喜欢"
         case .goBackward:
-            return "Backward 15s"
+            return "后退 15 秒"
         case .goForward:
-            return "Forward 15s"
+            return "前进 15 秒"
         case .none:
-            return "Empty slot"
+            return "空槽位"
         }
     }
 
