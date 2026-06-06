@@ -108,8 +108,8 @@ class QuickShareService: ObservableObject {
         panel.canChooseFiles = true
         panel.title = "选择要分享的文件"
         panel.message = provider.usesClipboardHandoff
-            ? "文件会复制到剪贴板，并打开 \(provider.id)。"
-            : "选择要通过 \(provider.id) 分享的文件。"
+            ? "文件会复制到剪贴板，并打开 \(provider.displayName)。"
+            : "选择要通过 \(provider.displayName) 分享的文件。"
 
         let completion: (NSApplication.ModalResponse) -> Void = { [weak self] response in
             defer {
