@@ -32,23 +32,10 @@ struct WelcomeView: View {
                     Text("欢迎使用")
                         .font(.title)
                         .foregroundStyle(.secondary)
+                    Text("面向中文用户的非官方 fork")
+                        .font(.callout)
+                        .foregroundStyle(.secondary)
                         .padding(.bottom, 30)
-                    if false {
-                        Text("PRO")
-                            .font(.system(size: 18, design: .rounded))
-                            .fontWeight(.bold)
-                            .foregroundStyle(.white)
-                            .padding(.horizontal, 12)
-                            .padding(.vertical, 3)
-                            .background(
-                                Capsule()
-                                    .fill(LinearGradient(colors: [.white.opacity(0.7), .white.opacity(0.3)], startPoint: .topLeading, endPoint: .bottomTrailing))
-                                    .strokeBorder(LinearGradient(stops: [.init(color: .white.opacity(0.7), location: 0.3), .init(color: .clear, location: 0.6)], startPoint: .topLeading, endPoint: .bottomTrailing))
-                                    .blendMode(.overlay)
-                            )
-                            .padding(.bottom, 30)
-                    }
-
 
                     Button {
                         onGetStarted?()
@@ -61,15 +48,14 @@ struct WelcomeView: View {
                 }
                 .padding(.top)
             }
-            
-            Image("theboringteam")
-                .resizable()
-                .aspectRatio(contentMode: .fit)
-                .frame(height: 22)
+
+            Text("基于 Boring Notch 开源项目，遵循 GPLv3；本项目不是 TheBoredTeam 官方发布。")
+                .font(.footnote)
+                .foregroundStyle(.secondary)
+                .multilineTextAlignment(.center)
                 .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
                 .padding()
                 .padding(.bottom, 36)
-                .blendMode(.overlay)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
         .ignoresSafeArea()

@@ -2405,17 +2405,6 @@ private func openSystemSettings(_ urlString: String) {
     NSWorkspace.shared.open(url)
 }
 
-func proFeatureBadge() -> some View {
-    Text("升级到 Pro")
-        .foregroundStyle(Color(red: 0.545, green: 0.196, blue: 0.98))
-        .font(.footnote.bold())
-        .padding(.vertical, 3)
-        .padding(.horizontal, 6)
-        .background(
-            RoundedRectangle(cornerRadius: 4).stroke(
-                Color(red: 0.545, green: 0.196, blue: 0.98), lineWidth: 1))
-}
-
 func comingSoonTag() -> some View {
     Text("即将推出")
         .foregroundStyle(.secondary)
