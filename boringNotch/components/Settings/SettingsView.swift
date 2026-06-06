@@ -605,7 +605,7 @@ struct Media: View {
             Section {
                 Picker("音乐来源", selection: $mediaController) {
                     ForEach(availableMediaControllers) { controller in
-                        Text(controller.displayName).tag(controller)
+                        Text(controller.pickerDisplayName).tag(controller)
                     }
                 }
                 .onChange(of: mediaController) { _, _ in

@@ -21,6 +21,7 @@ xattr -dr com.apple.quarantine "/Applications/Boring Notch CN.app"
 - 设置页简体中文本地化。
 - 媒体来源增加网易云音乐和 QQ 音乐。
 - 首次选择音乐来源和设置页音乐来源按中文用户常用顺序展示；在系统通用“正在播放”不可用时，会优先选择本机已安装的网易云音乐或 QQ 音乐。
+- 音乐来源选择会显示“推荐”“已安装”“未检测到”“通用”等中文状态，方便判断本机适合选择哪个播放器。
 - 媒体设置页增加诊断卡片、“复制诊断信息”和中文建议处理步骤，帮助检查播放器运行状态、正在播放数据、控制能力和关键权限状态。
 - 通用设置页增加中文“权限与安装自检”，可查看辅助功能、日历、提醒事项、相机权限状态，并处理 Gatekeeper 拦截。
 - 关于页增加“下载与安装”入口，可打开 GitHub Release 下载页并复制解除 macOS 拦截命令。
@@ -67,7 +68,7 @@ DEVELOPMENT_TEAM=YOURTEAMID UNNOTARIZED=1 ./scripts/build_release.sh
 本项目基于 Boring Notch 修改，继续遵循 GPLv3 发布。
 
 - GPLv3 许可证全文：[LICENSE](./LICENSE)
-- 对应源码：<https://github.com/Superuser-fank/boring-notch-cn/tree/v2.7.3-cn.20>
+- 对应源码：<https://github.com/Superuser-fank/boring-notch-cn/tree/v2.7.3-cn.21>
 - 第三方声明：[THIRD_PARTY_NOTICES.md](./THIRD_PARTY_NOTICES.md)
 - 第三方许可证原文：[THIRD_PARTY_LICENSES](./THIRD_PARTY_LICENSES)
 

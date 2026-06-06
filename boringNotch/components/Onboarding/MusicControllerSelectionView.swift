@@ -84,9 +84,24 @@ struct ControllerOptionView: View {
                 .animation(.spring(response: 0.3, dampingFraction: 0.6), value: isSelected)
 
             VStack(alignment: .leading, spacing: 4) {
-                Text(controller.displayName)
-                    .font(.headline)
-                    .fontWeight(.semibold)
+                HStack(spacing: 8) {
+                    Text(controller.displayName)
+                        .font(.headline)
+                        .fontWeight(.semibold)
+
+                    ForEach(controller.statusBadges, id: \.text) { badge in
+                        Text(badge.text)
+                            .font(.caption2)
+                            .fontWeight(.semibold)
+                            .foregroundStyle(badge.foregroundColor)
+                            .padding(.horizontal, 6)
+                            .padding(.vertical, 2)
+                            .background(
+                                Capsule()
+                                    .fill(badge.backgroundColor)
+                            )
+                    }
+                }
 
                 Text(controller.description)
                     .font(.subheadline)
@@ -116,6 +131,55 @@ struct ControllerOptionView: View {
 
 
 extension MediaControllerType {
+    fileprivate var statusBadges: [MediaSourceStatusBadge] {
+        if isRecommendedForChineseUsers {
+            return [
+                MediaSourceStatusBadge(
+                    text: "推荐",
+                    foregroundColor: .white,
+                    backgroundColor: .effectiveAccent
+                ),
+                MediaSourceStatusBadge(
+                    text: "已安装",
+                    foregroundColor: .green,
+                    backgroundColor: .green.opacity(0.16)
+                )
+            ]
+        }
+
+        if bundleIdentifiers.isEmpty {
+            return [
+                MediaSourceStatusBadge(
+                    text: "通用",
+                    foregroundColor: .secondary,
+                    backgroundColor: .secondary.opacity(0.16)
+                )
+            ]
+        }
+
+        if isKnownAppInstalled {
+            return [
+                MediaSourceStatusBadge(
+                    text: "已安装",
+                    foregroundColor: .green,
+                    backgroundColor: .green.opacity(0.16)
+                )
+            ]
+        }
+
+        if isPreferredChineseMusicApp {
+            return [
+                MediaSourceStatusBadge(
+                    text: "未检测到",
+                    foregroundColor: .orange,
+                    backgroundColor: .orange.opacity(0.16)
+                )
+            ]
+        }
+
+        return []
+    }
+
     var description: String {
         switch self {
         case .nowPlaying:
@@ -132,6 +196,12 @@ extension MediaControllerType {
             return "需要使用已启用 API 插件的第三方客户端。"
         }
     }
+}
+
+private struct MediaSourceStatusBadge {
+    let text: String
+    let foregroundColor: Color
+    let backgroundColor: Color
 }
 
 #Preview {

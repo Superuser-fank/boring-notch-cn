@@ -98,6 +98,34 @@ enum MediaControllerType: String, CaseIterable, Identifiable, Defaults.Serializa
         }
     }
 
+    var isPreferredChineseMusicApp: Bool {
+        self == .netEaseMusic || self == .qqMusic
+    }
+
+    var isRecommendedForChineseUsers: Bool {
+        MediaControllerType.preferredChineseInstalledController == self
+    }
+
+    var pickerDisplayName: String {
+        if isRecommendedForChineseUsers {
+            return "\(displayName)（推荐，已安装）"
+        }
+
+        guard !bundleIdentifiers.isEmpty else {
+            return "\(displayName)（通用）"
+        }
+
+        if isKnownAppInstalled {
+            return "\(displayName)（已安装）"
+        }
+
+        if isPreferredChineseMusicApp {
+            return "\(displayName)（未检测到）"
+        }
+
+        return displayName
+    }
+
     var bundleIdentifiers: [String] {
         switch self {
         case .nowPlaying:

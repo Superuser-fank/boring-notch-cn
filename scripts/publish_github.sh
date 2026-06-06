@@ -3,7 +3,7 @@ set -euo pipefail
 
 REPO_NAME="${REPO_NAME:-boring-notch-cn}"
 VISIBILITY="${VISIBILITY:-public}"
-TAG="${TAG:-v2.7.3-cn.20}"
+TAG="${TAG:-v2.7.3-cn.21}"
 BRANCH="${BRANCH:-main}"
 DMG_PATH="${DMG_PATH:-dist/BoringNotchCN-2.7.3-unnotarized.dmg}"
 REMOTE_NAME="${REMOTE_NAME:-publish}"
@@ -56,7 +56,7 @@ Boring Notch CN 是 Boring Notch 的公开源码 fork，主品牌名不使用任
 
 状态栏菜单现在增加“打开 Release 下载页”“打开 GitHub 项目”和“复制解除拦截命令”，方便用户从菜单栏直接处理下载、源码查看和首次打开被 Gatekeeper 拦截的问题；设置窗口标题也从英文改为“Boring Notch CN 设置”。
 
-首次选择音乐来源和设置页音乐来源现在按“系统正在播放、网易云音乐、QQ 音乐、Apple Music、Spotify、YouTube Music”的顺序展示。对于系统通用“正在播放”不可用的 macOS 版本，新安装用户会优先使用本机已安装的网易云音乐或 QQ 音乐；如果都未安装，再回退到 Apple Music。设置页也补充说明：网易云音乐和 QQ 音乐依赖 macOS 正在播放数据，支持基础播放控制。
+首次选择音乐来源和设置页音乐来源现在按“系统正在播放、网易云音乐、QQ 音乐、Apple Music、Spotify、YouTube Music”的顺序展示。对于系统通用“正在播放”不可用的 macOS 版本，新安装用户会优先使用本机已安装的网易云音乐或 QQ 音乐；如果都未安装，再回退到 Apple Music。音乐来源选择会显示“推荐”“已安装”“未检测到”“通用”等中文状态，方便用户判断本机适合选择哪个播放器。设置页也补充说明：网易云音乐和 QQ 音乐依赖 macOS 正在播放数据，支持基础播放控制。
 
 文件架快速分享中，“隔空投送”会打开系统分享面板并需要用户选择接收设备；“系统分享菜单”会打开 macOS 分享菜单，由用户选择具体服务。微信、QQ、钉钉、飞书快捷投递会复制内容到剪贴板并打开对应应用，需要用户手动选择联系人和发送，不会自动发送消息。
 
@@ -73,7 +73,7 @@ xattr -dr com.apple.quarantine "/Applications/Boring Notch CN.app"
 ### 开源与合规
 
 - 许可证：GPLv3。完整许可证见 `LICENSE`。
-- 对应源码：<https://github.com/Superuser-fank/boring-notch-cn/tree/v2.7.3-cn.20>
+- 对应源码：<https://github.com/Superuser-fank/boring-notch-cn/tree/v2.7.3-cn.21>
 - 第三方声明：见 `THIRD_PARTY_NOTICES.md` 和 `THIRD_PARTY_LICENSES`。
 - 这是非官方 fork，不是 TheBoredTeam 官方发布。
 - 网易云音乐、QQ 音乐、Apple Music、Spotify、YouTube Music、微信、QQ、钉钉、飞书等名称仅用于说明兼容的媒体来源或可投递目标；本项目与这些第三方服务没有从属、授权、背书或赞助关系。
@@ -81,10 +81,10 @@ xattr -dr com.apple.quarantine "/Applications/Boring Notch CN.app"
 NOTES
 
 if gh release view "$TAG" --repo "$REPO_FULL_NAME" >/dev/null 2>&1; then
-  gh release edit "$TAG" --repo "$REPO_FULL_NAME" --title "Boring Notch CN 2.7.3-cn.20" --notes-file "$RELEASE_NOTES"
+  gh release edit "$TAG" --repo "$REPO_FULL_NAME" --title "Boring Notch CN 2.7.3-cn.21" --notes-file "$RELEASE_NOTES"
   gh release upload "$TAG" "$DMG_PATH" --repo "$REPO_FULL_NAME" --clobber
 else
-  gh release create "$TAG" "$DMG_PATH" --repo "$REPO_FULL_NAME" --title "Boring Notch CN 2.7.3-cn.20" --notes-file "$RELEASE_NOTES"
+  gh release create "$TAG" "$DMG_PATH" --repo "$REPO_FULL_NAME" --title "Boring Notch CN 2.7.3-cn.21" --notes-file "$RELEASE_NOTES"
 fi
 
 echo "Published: https://github.com/$REPO_FULL_NAME/releases/tag/$TAG"
