@@ -1974,6 +1974,7 @@ private struct MediaDiagnosticsView: View {
     @Default(.mediaController) private var mediaController
     @ObservedObject private var musicManager = MusicManager.shared
     @State private var checkedAt = Date()
+    @State private var copiedDiagnosticReport = false
 
     private var diagnostic: MediaSourceDiagnostic {
         MediaSourceDiagnostic(controller: mediaController)
@@ -2058,6 +2059,9 @@ private struct MediaDiagnosticsView: View {
                         openPreferredApp()
                     }
                     .disabled(diagnostic.bundleIdentifiers.isEmpty)
+                    Button(copiedDiagnosticReport ? "已复制诊断" : "复制诊断信息") {
+                        Task { await copyDiagnosticReport() }
+                    }
                     Spacer()
                     Text("上次检查 \(checkedAt.formatted(date: .omitted, time: .shortened))")
                         .font(.caption)
@@ -2069,7 +2073,7 @@ private struct MediaDiagnosticsView: View {
         } header: {
             Text("媒体诊断")
         } footer: {
-            Text("网易云音乐等第三方播放器通过 macOS 正在播放数据识别。检测不到时，先播放一首歌，再点刷新。")
+            Text("网易云音乐等第三方播放器通过 macOS 正在播放数据识别。检测不到时，先播放一首歌，再点刷新。诊断信息不会包含歌曲名、歌手名、联系人或文件内容。")
                 .font(.caption)
                 .foregroundStyle(.secondary)
         }
@@ -2083,6 +2087,80 @@ private struct MediaDiagnosticsView: View {
 
         let configuration = NSWorkspace.OpenConfiguration()
         NSWorkspace.shared.openApplication(at: appURL, configuration: configuration)
+    }
+
+    @MainActor
+    private func copyDiagnosticReport() async {
+        let accessibilityAuthorized = await XPCHelperClient.shared.isAccessibilityAuthorized()
+        let report = makeDiagnosticReport(accessibilityAuthorized: accessibilityAuthorized)
+
+        NSPasteboard.general.clearContents()
+        NSPasteboard.general.setString(report, forType: .string)
+        copiedDiagnosticReport = true
+    }
+
+    private func makeDiagnosticReport(accessibilityAuthorized: Bool) -> String {
+        let bundle = Bundle.main
+        let version = bundle.infoDictionary?["CFBundleShortVersionString"] as? String ?? "未知"
+        let build = bundle.infoDictionary?["CFBundleVersion"] as? String ?? "未知"
+        let bundleIdentifier = bundle.bundleIdentifier ?? "未知"
+        let generatedAt = Date().formatted(date: .numeric, time: .standard)
+
+        return [
+            "【Boring Notch CN 诊断信息】",
+            "生成时间：\(generatedAt)",
+            "App 版本：\(version) (\(build))",
+            "Bundle ID：\(bundleIdentifier)",
+            "macOS：\(ProcessInfo.processInfo.operatingSystemVersionString)",
+            "",
+            "【媒体】",
+            "当前媒体来源：\(diagnostic.displayName)",
+            "播放器状态：\(selectedAppRunning ? "正在运行" : "未运行")",
+            "检测到的媒体 Bundle：\(detectedBundleIdentifier)",
+            "正在播放数据：\(playbackDataStatus.label)",
+            "基础控制：\(diagnostic.controlSummary)（\(diagnostic.controlStatus.label)）",
+            "排查建议：\(diagnostic.troubleshootingHint)",
+            "",
+            "【权限】",
+            "辅助功能：\(accessibilityAuthorized ? "已授权" : "未授权")",
+            "日历：\(eventStoreStatusText(EKEventStore.authorizationStatus(for: .event)))",
+            "提醒事项：\(eventStoreStatusText(EKEventStore.authorizationStatus(for: .reminder)))",
+            "相机：\(cameraStatusText(AVCaptureDevice.authorizationStatus(for: .video)))",
+            "",
+            "说明：这段诊断信息不包含歌曲名、歌手名、联系人或文件内容。"
+        ].joined(separator: "\n")
+    }
+
+    private func eventStoreStatusText(_ status: EKAuthorizationStatus) -> String {
+        switch status {
+        case .fullAccess:
+            return "已授权"
+        case .writeOnly:
+            return "仅写入"
+        case .denied:
+            return "已拒绝"
+        case .restricted:
+            return "受限制"
+        case .notDetermined:
+            return "未请求"
+        @unknown default:
+            return "未知状态"
+        }
+    }
+
+    private func cameraStatusText(_ status: AVAuthorizationStatus) -> String {
+        switch status {
+        case .authorized:
+            return "已授权"
+        case .denied:
+            return "已拒绝"
+        case .restricted:
+            return "受限制"
+        case .notDetermined:
+            return "未请求"
+        @unknown default:
+            return "未知状态"
+        }
     }
 }
 
