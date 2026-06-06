@@ -1995,6 +1995,10 @@ private struct MediaDiagnosticsView: View {
         musicManager.bundleIdentifier ?? "未检测到"
     }
 
+    private var detectedBundleIdentifierValue: String? {
+        musicManager.bundleIdentifier
+    }
+
     private var detectedMatchesSelectedSource: Bool {
         guard let bundleIdentifier = musicManager.bundleIdentifier else { return false }
         return diagnostic.matches(bundleIdentifier)
@@ -2016,6 +2020,15 @@ private struct MediaDiagnosticsView: View {
             return .warning("播放器已打开，等待正在播放数据")
         }
         return .inactive("未检测到播放器")
+    }
+
+    private var diagnosticAdviceItems: [String] {
+        diagnostic.troubleshootingAdvice(
+            selectedAppRunning: selectedAppRunning,
+            detectedBundleIdentifier: detectedBundleIdentifierValue,
+            detectedMatchesSelectedSource: detectedMatchesSelectedSource,
+            hasPlaybackData: hasPlaybackData
+        )
     }
 
     var body: some View {
@@ -2048,6 +2061,21 @@ private struct MediaDiagnosticsView: View {
                         .foregroundStyle(.secondary)
                         .fixedSize(horizontal: false, vertical: true)
                         .padding(.top, 2)
+                }
+
+                if !diagnosticAdviceItems.isEmpty {
+                    VStack(alignment: .leading, spacing: 6) {
+                        Label("建议处理", systemImage: "wrench.and.screwdriver")
+                            .font(.caption.bold())
+                            .foregroundStyle(.secondary)
+                        ForEach(Array(diagnosticAdviceItems.enumerated()), id: \.offset) { index, item in
+                            Text("\(index + 1). \(item)")
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
+                                .fixedSize(horizontal: false, vertical: true)
+                        }
+                    }
+                    .padding(.top, 2)
                 }
 
                 HStack {
@@ -2105,6 +2133,9 @@ private struct MediaDiagnosticsView: View {
         let build = bundle.infoDictionary?["CFBundleVersion"] as? String ?? "未知"
         let bundleIdentifier = bundle.bundleIdentifier ?? "未知"
         let generatedAt = Date().formatted(date: .numeric, time: .standard)
+        let adviceText = diagnosticAdviceItems.isEmpty
+            ? "暂无异常建议"
+            : diagnosticAdviceItems.map { "- \($0)" }.joined(separator: "\n")
 
         return [
             "【Boring Notch CN 诊断信息】",
@@ -2120,6 +2151,8 @@ private struct MediaDiagnosticsView: View {
             "正在播放数据：\(playbackDataStatus.label)",
             "基础控制：\(diagnostic.controlSummary)（\(diagnostic.controlStatus.label)）",
             "排查建议：\(diagnostic.troubleshootingHint)",
+            "建议处理：",
+            adviceText,
             "",
             "【权限】",
             "辅助功能：\(accessibilityAuthorized ? "已授权" : "未授权")",
@@ -2286,6 +2319,42 @@ private struct MediaSourceDiagnostic {
         case .youtubeMusic:
             return "请确认第三方 YouTube Music 客户端正在运行，并启用了 API 插件。"
         }
+    }
+
+    func troubleshootingAdvice(
+        selectedAppRunning: Bool,
+        detectedBundleIdentifier: String?,
+        detectedMatchesSelectedSource: Bool,
+        hasPlaybackData: Bool
+    ) -> [String] {
+        if hasPlaybackData {
+            return []
+        }
+
+        var advice: [String] = []
+
+        if !selectedAppRunning && !bundleIdentifiers.isEmpty {
+            advice.append("先打开 \(displayName)，并播放一首歌，再回到这里点“刷新媒体状态”。")
+        }
+
+        if let detectedBundleIdentifier, !detectedMatchesSelectedSource {
+            advice.append("macOS 当前正在播放数据来自 \(detectedBundleIdentifier)，不是所选的 \(displayName)；请暂停其他播放器或把媒体来源切到“系统正在播放”。")
+        } else if selectedAppRunning {
+            advice.append("播放器已打开但还没有歌曲数据时，先确认 macOS 控制中心能看到正在播放信息，再点“刷新媒体状态”。")
+        }
+
+        switch controller {
+        case .nowPlaying:
+            advice.append("如果多个播放器同时在播，系统可能只返回其中一个；请暂停不需要的播放器。")
+        case .netEaseMusic, .qqMusic:
+            advice.append("\(displayName) 通过 macOS 正在播放数据识别，收藏、歌词和播放列表控制不属于稳定能力。")
+        case .youtubeMusic:
+            advice.append("请确认第三方客户端的 API 插件已启用，并且本机防火墙没有阻止本地连接。")
+        case .appleMusic, .spotify:
+            advice.append("如果播放控制无效，请到系统设置的“隐私与安全性 > 自动化”里允许 Boring Notch CN 控制播放器。")
+        }
+
+        return advice
     }
 
     func matches(_ bundleIdentifier: String) -> Bool {
