@@ -1766,15 +1766,21 @@ struct Shortcuts: View {
 
 private struct ChinaSetupHelpSection: View {
     @State private var copiedQuarantineCommand = false
+    @State private var accessibilityAuthorized = false
+    @State private var calendarStatus = EKEventStore.authorizationStatus(for: .event)
+    @State private var reminderStatus = EKEventStore.authorizationStatus(for: .reminder)
+    @State private var cameraStatus = AVCaptureDevice.authorizationStatus(for: .video)
+    @State private var checkedAt = Date()
 
     private let quarantineCommand = #"xattr -dr com.apple.quarantine "/Applications/Boring Notch CN.app""#
 
     var body: some View {
         Section {
-            HelpActionRow(
+            SetupCheckRow(
                 icon: "shield.lefthalf.filled",
                 title: "首次打开被 macOS 拦截",
-                description: "当前公开构建未 notarize。如果系统提示无法打开，可以复制命令到终端执行。"
+                description: "当前公开构建未 notarize。如果系统提示无法打开，可以复制命令到终端执行。",
+                status: .warning("需要手动处理")
             ) {
                 Button(copiedQuarantineCommand ? "已复制" : "复制解除隔离命令") {
                     NSPasteboard.general.clearContents()
@@ -1783,44 +1789,157 @@ private struct ChinaSetupHelpSection: View {
                 }
             }
 
-            HelpActionRow(
+            SetupCheckRow(
                 icon: "figure.wave.circle",
                 title: "辅助功能权限",
-                description: "媒体键、音量/亮度 HUD 替换和部分交互需要此权限。"
+                description: "媒体键、音量/亮度 HUD 替换和部分交互需要此权限。",
+                status: accessibilityAuthorized ? .ok("已授权") : .warning("未授权")
             ) {
-                Button("打开辅助功能设置") {
-                    openSystemSettings("x-apple.systempreferences:com.apple.preference.security?Privacy_Accessibility")
+                if accessibilityAuthorized {
+                    Button("打开设置") {
+                        openSystemSettings("x-apple.systempreferences:com.apple.preference.security?Privacy_Accessibility")
+                    }
+                } else {
+                    Button("请求权限") {
+                        XPCHelperClient.shared.requestAccessibilityAuthorization()
+                    }
                 }
             }
 
-            HelpActionRow(
+            SetupCheckRow(
                 icon: "calendar.badge.clock",
-                title: "日历和提醒事项权限",
-                description: "如果刘海里没有日程或提醒，请在系统设置里允许访问。"
+                title: "日历权限",
+                description: "允许后，刘海可以显示接下来的日程和中国日历信息。",
+                status: diagnosticStatus(for: calendarStatus, grantedLabel: "已授权")
             ) {
-                HStack {
-                    Button("日历") {
+                if calendarStatus == .notDetermined {
+                    Button("请求权限") {
+                        Task {
+                            await CalendarManager.shared.checkCalendarAuthorization()
+                            await refreshStatuses()
+                        }
+                    }
+                } else {
+                    Button("打开设置") {
                         openSystemSettings("x-apple.systempreferences:com.apple.preference.security?Privacy_Calendars")
                     }
-                    Button("提醒事项") {
+                }
+            }
+
+            SetupCheckRow(
+                icon: "checklist",
+                title: "提醒事项权限",
+                description: "允许后，有时间的提醒事项可以和日程一起显示。",
+                status: diagnosticStatus(for: reminderStatus, grantedLabel: "已授权")
+            ) {
+                if reminderStatus == .notDetermined {
+                    Button("请求权限") {
+                        Task {
+                            await CalendarManager.shared.checkReminderAuthorization()
+                            await refreshStatuses()
+                        }
+                    }
+                } else {
+                    Button("打开设置") {
                         openSystemSettings("x-apple.systempreferences:com.apple.preference.security?Privacy_Reminders")
                     }
                 }
             }
+
+            SetupCheckRow(
+                icon: "camera",
+                title: "相机权限",
+                description: "只在启用刘海镜像时需要，用于本机实时预览。",
+                status: diagnosticStatus(for: cameraStatus)
+            ) {
+                if cameraStatus == .notDetermined {
+                    Button("请求权限") {
+                        Task {
+                            await AVCaptureDevice.requestAccess(for: .video)
+                            await refreshStatuses()
+                        }
+                    }
+                } else {
+                    Button("打开设置") {
+                        openSystemSettings("x-apple.systempreferences:com.apple.preference.security?Privacy_Camera")
+                    }
+                }
+            }
+
+            HStack {
+                Button("重新检查") {
+                    Task { await refreshStatuses() }
+                }
+                Spacer()
+                Text("上次检查 \(checkedAt.formatted(date: .omitted, time: .shortened))")
+                    .font(.caption)
+                    .foregroundStyle(.tertiary)
+            }
         } header: {
-            Text("中国用户上手")
+            Text("权限与安装自检")
         } footer: {
-            Text("这些入口只打开 macOS 系统设置或复制本地命令，不会上传数据。")
+            Text("自检只读取本机权限状态，并提供系统设置入口或本地命令；不会上传数据。")
                 .font(.caption)
                 .foregroundStyle(.secondary)
+        }
+        .task {
+            await refreshStatuses()
+        }
+        .onReceive(NotificationCenter.default.publisher(for: .accessibilityAuthorizationChanged)) { notification in
+            if let granted = notification.userInfo?["granted"] as? Bool {
+                accessibilityAuthorized = granted
+                checkedAt = Date()
+            }
+        }
+    }
+
+    @MainActor
+    private func refreshStatuses() async {
+        accessibilityAuthorized = await XPCHelperClient.shared.isAccessibilityAuthorized()
+        calendarStatus = EKEventStore.authorizationStatus(for: .event)
+        reminderStatus = EKEventStore.authorizationStatus(for: .reminder)
+        cameraStatus = AVCaptureDevice.authorizationStatus(for: .video)
+        checkedAt = Date()
+    }
+
+    private func diagnosticStatus(for status: EKAuthorizationStatus, grantedLabel: String) -> DiagnosticStatus {
+        switch status {
+        case .fullAccess:
+            return .ok(grantedLabel)
+        case .writeOnly:
+            return .warning("仅写入")
+        case .denied:
+            return .warning("已拒绝")
+        case .restricted:
+            return .warning("受限制")
+        case .notDetermined:
+            return .inactive("未请求")
+        @unknown default:
+            return .warning("未知状态")
+        }
+    }
+
+    private func diagnosticStatus(for status: AVAuthorizationStatus) -> DiagnosticStatus {
+        switch status {
+        case .authorized:
+            return .ok("已授权")
+        case .denied:
+            return .warning("已拒绝")
+        case .restricted:
+            return .warning("受限制")
+        case .notDetermined:
+            return .inactive("未请求")
+        @unknown default:
+            return .warning("未知状态")
         }
     }
 }
 
-private struct HelpActionRow<Actions: View>: View {
+private struct SetupCheckRow<Actions: View>: View {
     let icon: String
     let title: String
     let description: String
+    let status: DiagnosticStatus
     @ViewBuilder let actions: () -> Actions
 
     var body: some View {
@@ -1840,6 +1959,11 @@ private struct HelpActionRow<Actions: View>: View {
             }
 
             Spacer(minLength: 24)
+            Label(status.label, systemImage: status.symbolName)
+                .labelStyle(.titleAndIcon)
+                .font(.caption)
+                .foregroundStyle(status.color)
+                .frame(minWidth: 72, alignment: .leading)
             actions()
         }
         .padding(.vertical, 2)
