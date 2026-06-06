@@ -69,10 +69,10 @@ struct CameraPreviewView: View {
         case .denied, .restricted:
             DispatchQueue.main.async {
                 let alert = NSAlert()
-                alert.messageText = "Camera Access Required"
-                alert.informativeText = "Please allow camera access in System Settings to use the mirror feature."
-                alert.addButton(withTitle: "Open System Settings")
-                alert.addButton(withTitle: "Cancel")
+                alert.messageText = "需要相机权限"
+                alert.informativeText = "请在系统设置中允许 Boring Notch CN 访问相机，才能使用镜像预览。"
+                alert.addButton(withTitle: "打开系统设置")
+                alert.addButton(withTitle: "取消")
 
                 if alert.runModal() == .alertFirstButtonReturn {
                     if let settingsURL = URL(string: "x-apple.systempreferences:com.apple.preference.security?Privacy_Camera") {

@@ -69,7 +69,7 @@ struct InlineHUD: View {
             
             HStack {
                 if (type == .mic) {
-                    Text(value.isZero ? "muted" : "unmuted")
+                    Text(value.isZero ? "已静音" : "已开启")
                         .foregroundStyle(.gray)
                         .lineLimit(1)
                         .allowsTightening(true)
@@ -86,7 +86,7 @@ struct InlineHUD: View {
                             }
                         })
                         if (type == .volume && value.isZero) {
-                            Text("muted")
+                            Text("静音")
                                 .font(.caption)
                                 .fontWeight(.medium)
                                 .foregroundStyle(.gray)
@@ -140,13 +140,13 @@ struct InlineHUD: View {
     func Type2Name(_ type: SneakContentType) -> String {
         switch(type) {
             case .volume:
-                return "Volume"
+                return "音量"
             case .brightness:
-                return "Brightness"
+                return "亮度"
             case .backlight:
-                return "Backlight"
+                return "键盘灯"
             case .mic:
-                return "Mic"
+                return "麦克风"
             default:
                 return ""
         }

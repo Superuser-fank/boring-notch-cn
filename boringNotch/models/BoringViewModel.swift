@@ -149,10 +149,10 @@ class BoringViewModel: NSObject, ObservableObject {
                 NSApp.activate(ignoringOtherApps: true)
 
                 let alert = NSAlert()
-                alert.messageText = "Camera Access Required"
-                alert.informativeText = "Please allow camera access in System Settings."
-                alert.addButton(withTitle: "Open Settings")
-                alert.addButton(withTitle: "Cancel")
+                alert.messageText = "需要相机权限"
+                alert.informativeText = "请在系统设置中允许 Boring Notch CN 访问相机。"
+                alert.addButton(withTitle: "打开设置")
+                alert.addButton(withTitle: "取消")
 
                 if alert.runModal() == .alertFirstButtonReturn {
                     if let url = URL(string: "x-apple.systempreferences:com.apple.preference.security?Privacy_Camera") {

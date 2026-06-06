@@ -63,7 +63,7 @@ struct BoringExtrasMenu : View {
                 VStack(spacing: 8) {
                     Image(systemName: "gear").resizable()
                         .aspectRatio(contentMode: .fit).frame(width:20)
-                    Text("Settings").font(.body)
+                    Text("设置").font(.body)
                 }
             }
         }
@@ -78,7 +78,7 @@ struct BoringExtrasMenu : View {
                 }
             },
             icon: Image(systemName: "arrow.down.forward.and.arrow.up.backward"),
-            title: "Hide"
+            title: "隐藏"
         )
     }
     
@@ -92,7 +92,7 @@ struct BoringExtrasMenu : View {
                 }
             },
             icon: Image(systemName: "xmark"),
-            title: "Exit"
+            title: "退出"
         )
     }
 }

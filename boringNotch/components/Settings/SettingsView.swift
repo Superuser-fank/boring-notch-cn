@@ -871,7 +871,7 @@ struct About: View {
                             Text("(\(Bundle.main.buildVersionNumber ?? ""))")
                                 .foregroundStyle(.secondary)
                         }
-                        Text(Bundle.main.releaseVersionNumber ?? "unkown")
+                        Text(Bundle.main.releaseVersionNumber ?? "未知")
                             .foregroundStyle(.secondary)
                     }
                     .onTapGesture {

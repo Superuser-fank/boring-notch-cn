@@ -183,7 +183,7 @@ struct ContentView: View {
                     }
                     .sensoryFeedback(.alignment, trigger: haptics)
                     .contextMenu {
-                        Button("Settings") {
+                        Button("设置") {
                             DispatchQueue.main.async {
                                 SettingsWindowController.shared.showWindow()
                             }

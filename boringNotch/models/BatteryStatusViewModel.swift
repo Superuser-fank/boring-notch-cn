@@ -56,7 +56,7 @@ class BatteryStatusViewModel: ObservableObject {
             print("🔌 Power source: \(isPluggedIn ? "Connected" : "Disconnected")")
             withAnimation {
                 self.isPluggedIn = isPluggedIn
-                self.statusText = isPluggedIn ? "Plugged In" : "Unplugged"
+                self.statusText = isPluggedIn ? "已接入电源" : "使用电池"
                 self.notifyImportanChangeStatus()
             }
 
@@ -71,7 +71,7 @@ class BatteryStatusViewModel: ObservableObject {
             self.notifyImportanChangeStatus()
             withAnimation {
                 self.isInLowPowerMode = isEnabled
-                self.statusText = "Low Power: \(self.isInLowPowerMode ? "On" : "Off")"
+                self.statusText = self.isInLowPowerMode ? "低电量模式已开启" : "低电量模式已关闭"
             }
 
         case .isChargingChanged(let isCharging):
@@ -83,8 +83,8 @@ class BatteryStatusViewModel: ObservableObject {
                 self.isCharging = isCharging
                 self.statusText =
                     isCharging
-                    ? "Charging battery"
-                    : (self.levelBattery < self.maxCapacity ? "Not charging" : "Full charge")
+                    ? "正在充电"
+                    : (self.levelBattery < self.maxCapacity ? "未在充电" : "已充满")
             }
 
         case .timeToFullChargeChanged(let time):
@@ -114,7 +114,7 @@ class BatteryStatusViewModel: ObservableObject {
             self.isInLowPowerMode = batteryInfo.isInLowPowerMode
             self.timeToFullCharge = batteryInfo.timeToFullCharge
             self.maxCapacity = batteryInfo.maxCapacity
-            self.statusText = batteryInfo.isPluggedIn ? "Plugged In" : "Unplugged"
+            self.statusText = batteryInfo.isPluggedIn ? "已接入电源" : "使用电池"
         }
     }
 
