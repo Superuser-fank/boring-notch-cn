@@ -55,7 +55,7 @@ enum MediaControllerType: String, CaseIterable, Identifiable, Defaults.Serializa
     var displayName: String {
         switch self {
         case .nowPlaying:
-            "正在播放"
+            "系统正在播放"
         case .appleMusic:
             "Apple Music"
         case .spotify:
@@ -65,7 +65,7 @@ enum MediaControllerType: String, CaseIterable, Identifiable, Defaults.Serializa
         case .qqMusic:
             "QQ 音乐"
         case .youtubeMusic:
-            "YouTube Music"
+            "YouTube Music（第三方客户端）"
         }
     }
 }

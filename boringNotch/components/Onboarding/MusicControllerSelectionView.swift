@@ -133,7 +133,7 @@ extension MediaControllerType {
         case .qqMusic:
             return "读取 QQ 音乐写入的 macOS 正在播放数据，支持基础播放控制。"
         case .youtubeMusic:
-            return "需要启用 API 插件的第三方客户端。"
+            return "需要使用已启用 API 插件的第三方客户端。"
         }
     }
 }

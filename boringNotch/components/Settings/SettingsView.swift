@@ -2025,20 +2025,7 @@ private struct MediaSourceDiagnostic {
     let controller: MediaControllerType
 
     var displayName: String {
-        switch controller {
-        case .nowPlaying:
-            return "正在播放"
-        case .appleMusic:
-            return "Apple Music"
-        case .spotify:
-            return "Spotify"
-        case .netEaseMusic:
-            return "网易云音乐"
-        case .qqMusic:
-            return "QQ 音乐"
-        case .youtubeMusic:
-            return "YouTube Music"
-        }
+        controller.displayName
     }
 
     var bundleIdentifiers: [String] {
