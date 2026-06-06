@@ -15,11 +15,7 @@ struct MusicControllerSelectionView: View {
     @Default(.mediaController) var mediaController
     
     private var availableMediaControllers: [MediaControllerType] {
-        if MusicManager.shared.isNowPlayingDeprecated {
-            return MediaControllerType.allCases.filter { $0 != .nowPlaying }
-        } else {
-            return MediaControllerType.allCases
-        }
+        MediaControllerType.availableForCurrentSystem
     }
     
     @State private var selectedMediaController: MediaControllerType = Defaults[.mediaController]
@@ -31,7 +27,7 @@ struct MusicControllerSelectionView: View {
                 .fontWeight(.bold)
                 .padding(.top, 24)
 
-            Text("选择你想使用的音乐来源。之后也可以在应用设置中修改。")
+            Text("选择你想使用的音乐来源。国内常用播放器已靠前显示，之后也可以在应用设置中修改。")
                 .multilineTextAlignment(.center)
                 .font(.body)
                 .foregroundColor(.secondary)

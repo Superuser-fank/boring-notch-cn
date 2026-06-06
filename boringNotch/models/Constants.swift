@@ -5,6 +5,7 @@
 //  Created by Richard Kunkli on 2024. 10. 17..
 //
 
+import AppKit
 import SwiftUI
 import Defaults
 
@@ -66,6 +67,51 @@ enum MediaControllerType: String, CaseIterable, Identifiable, Defaults.Serializa
             "QQ 音乐"
         case .youtubeMusic:
             "YouTube Music（第三方客户端）"
+        }
+    }
+
+    static var preferredDisplayOrder: [MediaControllerType] {
+        [
+            .nowPlaying,
+            .netEaseMusic,
+            .qqMusic,
+            .appleMusic,
+            .spotify,
+            .youtubeMusic
+        ]
+    }
+
+    static var availableForCurrentSystem: [MediaControllerType] {
+        if MusicManager.shared.isNowPlayingDeprecated {
+            return preferredDisplayOrder.filter { $0 != .nowPlaying }
+        }
+        return preferredDisplayOrder
+    }
+
+    static var preferredChineseInstalledController: MediaControllerType? {
+        [.netEaseMusic, .qqMusic].first { $0.isKnownAppInstalled }
+    }
+
+    var isKnownAppInstalled: Bool {
+        bundleIdentifiers.contains {
+            NSWorkspace.shared.urlForApplication(withBundleIdentifier: $0) != nil
+        }
+    }
+
+    var bundleIdentifiers: [String] {
+        switch self {
+        case .nowPlaying:
+            []
+        case .appleMusic:
+            ["com.apple.Music"]
+        case .spotify:
+            ["com.spotify.client"]
+        case .netEaseMusic:
+            ["com.netease.163music"]
+        case .qqMusic:
+            ["com.tencent.QQMusicMac", "com.tencent.QQMusic"]
+        case .youtubeMusic:
+            ["com.github.th-ch.youtube-music"]
         }
     }
 }
@@ -232,7 +278,7 @@ extension Defaults.Keys {
     // Helper to determine the default media controller based on NowPlaying deprecation status
     static var defaultMediaController: MediaControllerType {
         if MusicManager.shared.isNowPlayingDeprecated {
-            return .appleMusic
+            return MediaControllerType.preferredChineseInstalledController ?? .appleMusic
         } else {
             return .nowPlaying
         }

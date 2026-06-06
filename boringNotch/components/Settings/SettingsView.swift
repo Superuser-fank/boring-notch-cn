@@ -617,24 +617,28 @@ struct Media: View {
             } header: {
                 Text("媒体来源")
             } footer: {
-                if MusicManager.shared.isNowPlayingDeprecated {
+                VStack(alignment: .leading, spacing: 4) {
+                    if MusicManager.shared.isNowPlayingDeprecated {
+                        Text("当前 macOS 不再提供通用“系统正在播放”来源。Boring Notch CN 会优先列出国内常用播放器；网易云音乐和 QQ 音乐依赖 macOS 正在播放数据，支持基础播放控制。")
+                            .foregroundStyle(.secondary)
+                            .font(.caption)
+                    } else {
+                        Text("“系统正在播放”兼容大多数播放器；如果主要使用网易云音乐或 QQ 音乐，选择具体来源可以让诊断和提示更准确。")
+                            .foregroundStyle(.secondary)
+                            .font(.caption)
+                    }
+
                     HStack {
-                        Text("YouTube Music 需要安装这个第三方应用：")
+                        Text("YouTube Music 需要安装第三方客户端并启用 API 插件：")
                             .foregroundStyle(.secondary)
                             .font(.caption)
                         Link(
-                            "https://github.com/pear-devs/pear-desktop",
+                            "pear-devs/pear-desktop",
                             destination: URL(string: "https://github.com/pear-devs/pear-desktop")!
                         )
                         .font(.caption)
-                        .foregroundColor(.blue)  // Ensures it's visibly a link
+                        .foregroundColor(.blue)
                     }
-                } else {
-                    Text(
-                        "“正在播放”是旧版本唯一的选项，适用于大多数媒体应用。"
-                    )
-                    .foregroundStyle(.secondary)
-                    .font(.caption)
                 }
             }
 
@@ -700,11 +704,7 @@ struct Media: View {
 
     // Only show controller options that are available on this macOS version
     private var availableMediaControllers: [MediaControllerType] {
-        if MusicManager.shared.isNowPlayingDeprecated {
-            return MediaControllerType.allCases.filter { $0 != .nowPlaying }
-        } else {
-            return MediaControllerType.allCases
-        }
+        MediaControllerType.availableForCurrentSystem
     }
 }
 
@@ -2297,20 +2297,7 @@ private struct MediaSourceDiagnostic {
     }
 
     var bundleIdentifiers: [String] {
-        switch controller {
-        case .nowPlaying:
-            return []
-        case .appleMusic:
-            return ["com.apple.Music"]
-        case .spotify:
-            return ["com.spotify.client"]
-        case .netEaseMusic:
-            return ["com.netease.163music"]
-        case .qqMusic:
-            return ["com.tencent.QQMusicMac", "com.tencent.QQMusic"]
-        case .youtubeMusic:
-            return ["com.github.th-ch.youtube-music"]
-        }
+        controller.bundleIdentifiers
     }
 
     var controlSummary: String {
