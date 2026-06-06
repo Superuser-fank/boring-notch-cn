@@ -714,6 +714,7 @@ struct CalendarSettings: View {
     @Default(.hideCompletedReminders) var hideCompletedReminders
     @Default(.hideAllDayEvents) var hideAllDayEvents
     @Default(.autoScrollToNextEvent) var autoScrollToNextEvent
+    @Default(.showChineseCalendarInfo) var showChineseCalendarInfo
 
     var body: some View {
         Form {
@@ -731,6 +732,17 @@ struct CalendarSettings: View {
             }
             Defaults.Toggle(key: .showFullEventTitles) {
                 Text("始终显示完整日程标题")
+            }
+            Section {
+                Defaults.Toggle(key: .showChineseCalendarInfo) {
+                    Text("显示农历和中国节日")
+                }
+            } header: {
+                Text("中国日历")
+            } footer: {
+                Text("在刘海日历中显示农历日期和常见中国节日。本地计算不包含法定节假日调休、补班安排。")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
             }
             Section(header: Text("日历")) {
                 if calendarManager.calendarAuthorizationStatus != .fullAccess {

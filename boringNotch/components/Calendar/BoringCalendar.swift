@@ -21,6 +21,7 @@ struct Config: Equatable {
 struct WheelPicker: View {
     @EnvironmentObject var vm: BoringViewModel
     @Binding var selectedDate: Date
+    @Default(.showChineseCalendarInfo) private var showChineseCalendarInfo
     @State private var scrollPosition: Int?
     @State private var haptics: Bool = false
     @State private var byClick: Bool = false
@@ -88,9 +89,11 @@ struct WheelPicker: View {
         date: Date, isSelected: Bool, id: Int, onClick: @escaping () -> Void
     ) -> some View {
         let isToday = Calendar.current.isDateInToday(date)
+        let chinaInfo = ChineseCalendarInfo(date: date)
+        let topLabel = showChineseCalendarInfo ? (chinaInfo.holidayName ?? dateToString(for: date)) : dateToString(for: date)
         return Button(action: onClick) {
             VStack(spacing: 8) {
-                dayText(date: dateToString(for: date), isToday: isToday, isSelected: isSelected)
+                dayText(date: topLabel, isToday: isToday, isSelected: isSelected)
                 dateCircle(date: date, isToday: isToday, isSelected: isSelected)
             }
             .padding(.vertical, 4)
@@ -172,30 +175,40 @@ struct WheelPicker: View {
     }
 
     private func dateToString(for date: Date) -> String {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "E"
-        return formatter.string(from: date)
+        ChineseCalendarInfo.weekdayText(for: date)
     }
 }
 
 struct CalendarView: View {
     @EnvironmentObject var vm: BoringViewModel
     @ObservedObject private var calendarManager = CalendarManager.shared
+    @Default(.showChineseCalendarInfo) private var showChineseCalendarInfo
     @State private var selectedDate = Date()
 
     var body: some View {
+        let chinaInfo = ChineseCalendarInfo(date: selectedDate)
         VStack(spacing: 0) {
             HStack(alignment: .top, spacing: 8) {
                 VStack(alignment: .leading) {
-                    Text(selectedDate.formatted(.dateTime.month(.abbreviated)))
+                    Text(ChineseCalendarInfo.monthText(for: selectedDate))
                         .font(.title3)
                         .fontWeight(.semibold)
                         .foregroundColor(.white)
-                    Text(selectedDate.formatted(.dateTime.year()))
+                    Text(ChineseCalendarInfo.yearText(for: selectedDate))
                         .font(.title3)
                         .fontWeight(.light)
                         .foregroundColor(Color(white: 0.65))
+                    if showChineseCalendarInfo {
+                        Text(chinaInfo.displayText)
+                            .font(.caption2)
+                            .fontWeight(chinaInfo.holidayName == nil ? .regular : .medium)
+                            .foregroundColor(chinaInfo.holidayName == nil ? Color(white: 0.65) : .effectiveAccent)
+                            .lineLimit(2)
+                            .fixedSize(horizontal: false, vertical: true)
+                            .padding(.top, 1)
+                    }
                 }
+                .frame(width: 52, alignment: .leading)
 
                 ZStack(alignment: .top) {
                     WheelPicker(selectedDate: $selectedDate, config: Config())
@@ -253,10 +266,10 @@ struct EmptyEventsView: View {
             Image(systemName: "calendar.badge.checkmark")
                 .font(.title)
                 .foregroundColor(Color(white: 0.65))
-            Text(Calendar.current.isDateInToday(selectedDate) ? "No events today" : "No events")
+            Text(Calendar.current.isDateInToday(selectedDate) ? "今天没有日程" : "没有日程")
                 .font(.subheadline)
                 .foregroundColor(.white)
-            Text("Enjoy your free time!")
+            Text("可以安心空出来。")
                 .font(.caption)
                 .foregroundColor(Color(white: 0.65))
         }
@@ -373,7 +386,7 @@ struct EventListView: View {
                         Spacer(minLength: 0)
                         VStack(alignment: .trailing, spacing: 4) {
                             if event.isAllDay {
-                                Text("All-day")
+                                Text("全天")
                                     .font(.caption)
                                     .fontWeight(.medium)
                                     .foregroundColor(.white)
@@ -419,7 +432,7 @@ struct EventListView: View {
                     Spacer(minLength: 0)
                     VStack(alignment: .trailing, spacing: 4) {
                         if event.isAllDay {
-                            Text("All-day")
+                            Text("全天")
                                 .font(.caption)
                                 .fontWeight(.medium)
                                 .foregroundColor(.white)
@@ -468,7 +481,124 @@ struct ReminderToggle: View {
         }
         .buttonStyle(PlainButtonStyle())
         .padding(0)
-        .accessibilityLabel(isOn ? "Mark as incomplete" : "Mark as complete")
+        .accessibilityLabel(isOn ? "标记为未完成" : "标记为已完成")
+    }
+}
+
+private struct ChineseCalendarInfo {
+    let date: Date
+
+    private static let gregorianCalendar = Calendar(identifier: .gregorian)
+    private static var chineseCalendar: Calendar = {
+        var calendar = Calendar(identifier: .chinese)
+        calendar.locale = Locale(identifier: "zh_CN")
+        return calendar
+    }()
+
+    var displayText: String {
+        if let holidayName {
+            return "\(holidayName) · \(lunarText)"
+        }
+        return lunarText
+    }
+
+    var holidayName: String? {
+        solarHolidayName ?? lunarHolidayName
+    }
+
+    var lunarText: String {
+        let components = Self.chineseCalendar.dateComponents([.month, .day, .isLeapMonth], from: date)
+        guard let month = components.month, let day = components.day else {
+            return ""
+        }
+
+        let leapPrefix = components.isLeapMonth == true ? "闰" : ""
+        return "\(leapPrefix)\(Self.lunarMonthName(month))\(Self.lunarDayName(day))"
+    }
+
+    private var solarHolidayName: String? {
+        let components = Self.gregorianCalendar.dateComponents([.month, .day], from: date)
+        switch (components.month, components.day) {
+        case (1, 1):
+            return "元旦"
+        case (5, 1):
+            return "劳动节"
+        case (10, 1):
+            return "国庆节"
+        default:
+            return nil
+        }
+    }
+
+    private var lunarHolidayName: String? {
+        let components = Self.chineseCalendar.dateComponents([.month, .day, .isLeapMonth], from: date)
+        guard components.isLeapMonth != true else { return nil }
+
+        switch (components.month, components.day) {
+        case (1, 1):
+            return "春节"
+        case (1, 15):
+            return "元宵"
+        case (5, 5):
+            return "端午"
+        case (7, 7):
+            return "七夕"
+        case (8, 15):
+            return "中秋"
+        case (9, 9):
+            return "重阳"
+        case (12, 8):
+            return "腊八"
+        case (12, 23):
+            return "小年"
+        default:
+            return isLunarNewYearEve ? "除夕" : nil
+        }
+    }
+
+    private var isLunarNewYearEve: Bool {
+        guard let tomorrow = Self.gregorianCalendar.date(byAdding: .day, value: 1, to: date) else {
+            return false
+        }
+        let components = Self.chineseCalendar.dateComponents([.month, .day, .isLeapMonth], from: tomorrow)
+        return components.isLeapMonth != true && components.month == 1 && components.day == 1
+    }
+
+    static func weekdayText(for date: Date) -> String {
+        let formatter = DateFormatter()
+        formatter.locale = Locale(identifier: "zh_CN")
+        formatter.dateFormat = "E"
+        return formatter.string(from: date)
+    }
+
+    static func monthText(for date: Date) -> String {
+        let formatter = DateFormatter()
+        formatter.locale = Locale(identifier: "zh_CN")
+        formatter.dateFormat = "M月"
+        return formatter.string(from: date)
+    }
+
+    static func yearText(for date: Date) -> String {
+        let formatter = DateFormatter()
+        formatter.locale = Locale(identifier: "zh_CN")
+        formatter.dateFormat = "yyyy"
+        return formatter.string(from: date)
+    }
+
+    private static func lunarMonthName(_ month: Int) -> String {
+        let names = ["正月", "二月", "三月", "四月", "五月", "六月", "七月", "八月", "九月", "十月", "冬月", "腊月"]
+        guard names.indices.contains(month - 1) else { return "\(month)月" }
+        return names[month - 1]
+    }
+
+    private static func lunarDayName(_ day: Int) -> String {
+        let names = [
+            "初一", "初二", "初三", "初四", "初五", "初六", "初七", "初八", "初九", "初十",
+            "十一", "十二", "十三", "十四", "十五", "十六", "十七", "十八", "十九", "二十",
+            "廿一", "廿二", "廿三", "廿四", "廿五", "廿六", "廿七", "廿八", "廿九", "三十"
+        ]
+        guard names.indices.contains(day - 1) else { return "\(day)" }
+        return names[day - 1]
     }
 }
 
