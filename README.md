@@ -25,7 +25,7 @@ xattr -dr com.apple.quarantine "/Applications/Boring Notch CN.app"
 - 关于页增加“下载与安装”入口，可打开 GitHub Release 下载页并复制解除 macOS 拦截命令。
 - 首次欢迎页显示中文非官方 fork 说明，避免误认为 TheBoredTeam 官方发布或付费 Pro 版本。
 - 日历增加中文月份/星期、农历、常见中国节日、2026 年中国法定休假和补班提示，可在设置页关闭。
-- 文件架快速分享增加微信、QQ、钉钉、飞书快捷投递：会复制到剪贴板并打开对应应用，需要手动选择联系人和发送。
+- 文件架快速分享增加微信、QQ、钉钉、飞书快捷投递，并补充隔空投送、系统分享菜单的中文显示和操作提示；聊天应用投递会复制到剪贴板并打开对应应用，需要手动选择联系人和发送。
 - 首次启动引导、更新弹窗、提示卡、菜单栏、刘海快捷菜单、权限授权说明、软件更新、媒体控制布局、媒体来源选项、电池/HUD/下载提示、文件架空状态、文件架操作菜单和图片处理弹窗改为中文。
 - 保留原版 Boring Notch 的刘海交互、媒体控制、日历、提醒事项、电池、HUD、文件架等能力。
 - Release 包和 App 显示名使用 `Boring Notch CN`，主品牌名不包含第三方服务名称。
@@ -65,7 +65,7 @@ DEVELOPMENT_TEAM=YOURTEAMID UNNOTARIZED=1 ./scripts/build_release.sh
 本项目基于 Boring Notch 修改，继续遵循 GPLv3 发布。
 
 - GPLv3 许可证全文：[LICENSE](./LICENSE)
-- 对应源码：<https://github.com/Superuser-fank/boring-notch-cn/tree/v2.7.3-cn.17>
+- 对应源码：<https://github.com/Superuser-fank/boring-notch-cn/tree/v2.7.3-cn.18>
 - 第三方声明：[THIRD_PARTY_NOTICES.md](./THIRD_PARTY_NOTICES.md)
 - 第三方许可证原文：[THIRD_PARTY_LICENSES](./THIRD_PARTY_LICENSES)
 

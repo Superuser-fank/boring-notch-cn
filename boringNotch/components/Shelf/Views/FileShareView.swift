@@ -89,11 +89,9 @@ struct FileShareView: View {
                     .font(.system(.headline, design: .rounded))
                     .foregroundColor(.white.opacity(0.8))
 
-                if selectedProvider.usesClipboardHandoff {
-                    Text("复制后打开")
-                        .font(.caption2)
-                        .foregroundColor(Color(white: 0.65))
-                }
+                Text(selectedProvider.deliveryHint)
+                    .font(.caption2)
+                    .foregroundColor(Color(white: 0.65))
 
             }
             .padding(18)

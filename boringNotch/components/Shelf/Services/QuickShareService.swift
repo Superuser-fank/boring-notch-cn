@@ -22,10 +22,40 @@ struct QuickShareProvider: Identifiable, Hashable, Sendable {
 
     var displayName: String {
         switch id {
+        case "AirDrop":
+            "隔空投送"
         case "System Share Menu":
             "系统分享菜单"
         default:
             id
+        }
+    }
+
+    var deliveryHint: String {
+        if usesClipboardHandoff {
+            return "复制后打开"
+        }
+        switch id {
+        case "AirDrop":
+            return "选择接收设备"
+        case "System Share Menu":
+            return "选择分享服务"
+        default:
+            return "系统分享"
+        }
+    }
+
+    var settingsDescription: String {
+        if usesClipboardHandoff {
+            return "会复制到剪贴板并打开应用，需要你手动粘贴发送。"
+        }
+        switch id {
+        case "AirDrop":
+            return "会打开隔空投送分享面板，需要你选择接收设备。"
+        case "System Share Menu":
+            return "会打开 macOS 系统分享菜单，由你选择具体服务。"
+        default:
+            return "拖到文件架的文件会通过此服务分享。"
         }
     }
 }

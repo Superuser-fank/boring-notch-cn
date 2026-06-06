@@ -1044,7 +1044,7 @@ struct Shelf: View {
                             Text("当前选择：\(selectedProvider.displayName)")
                                 .font(.caption)
                                 .foregroundColor(.secondary)
-                            Text(selectedProvider.usesClipboardHandoff ? "会复制到剪贴板并打开应用，需要你手动粘贴发送。" : "拖到文件架的文件会通过此服务分享。")
+                            Text(selectedProvider.settingsDescription)
                                 .font(.caption2)
                                 .foregroundColor(.secondary)
                         }
