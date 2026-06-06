@@ -12,7 +12,7 @@
 ## 构建要求
 
 - Xcode 位于 `/Applications/Xcode.app`。
-- 公开源码仓库：<https://github.com/Superuser-fank/boringnotch-netease>
+- 公开源码仓库：<https://github.com/Superuser-fank/boring-notch-cn>
 - 本地有可用代码签名证书。
 
 未 notarize 分发只需要 Apple Development 证书，但用户首次打开可能需要手动移除 quarantine。

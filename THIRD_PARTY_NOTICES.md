@@ -6,7 +6,7 @@
 
 - 上游项目：Boring Notch
 - 上游仓库：<https://github.com/TheBoredTeam/boring.notch>
-- 本 fork 源码：<https://github.com/Superuser-fank/boringnotch-netease>
+- 本 fork 源码：<https://github.com/Superuser-fank/boring-notch-cn>
 - 本项目继续遵循 GPLv3，许可证全文见 [LICENSE](./LICENSE)。
 
 ## 主要第三方开源项目
