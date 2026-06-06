@@ -33,8 +33,8 @@ struct DynamicNotchApp: App {
     }
 
     var body: some Scene {
-        MenuBarExtra("boring.notch", systemImage: "sparkle", isInserted: $showMenuBarIcon) {
-            Button("Settings") {
+        MenuBarExtra("Boring Notch CN", systemImage: "sparkle", isInserted: $showMenuBarIcon) {
+            Button("设置") {
                 DispatchQueue.main.async {
                     SettingsWindowController.shared.showWindow()
                 }
@@ -44,10 +44,10 @@ struct DynamicNotchApp: App {
                 CheckForUpdatesView(updater: updater)
             }
             Divider()
-            Button("Restart Boring Notch") {
+            Button("重启 Boring Notch CN") {
                 ApplicationRelauncher.restart()
             }
-            Button("Quit", role: .destructive) {
+            Button("退出", role: .destructive) {
                 NSApplication.shared.terminate(self)
             }
             .keyboardShortcut(KeyEquivalent("Q"), modifiers: .command)

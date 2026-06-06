@@ -847,8 +847,13 @@ func lighterColor(from nsColor: NSColor, amount: CGFloat = 0.14) -> Color {
 
 struct About: View {
     @State private var showBuildNumber: Bool = false
+    @State private var copiedQuarantineCommand = false
     let updaterController: SPUStandardUpdaterController?
     @Environment(\.openWindow) var openWindow
+
+    private let releaseURL = URL(string: "https://github.com/Superuser-fank/boring-notch-cn/releases")!
+    private let quarantineCommand = #"xattr -dr com.apple.quarantine "/Applications/Boring Notch CN.app""#
+
     var body: some View {
         VStack {
             Form {
@@ -882,12 +887,40 @@ struct About: View {
                     UpdaterSettingsView(updater: updater)
                 }
 
+                Section {
+                    HStack {
+                        Text("最新安装包")
+                        Spacer()
+                        Button("打开 Release 下载页") {
+                            NSWorkspace.shared.open(releaseURL)
+                        }
+                    }
+                    HStack {
+                        VStack(alignment: .leading, spacing: 2) {
+                            Text("首次打开被 macOS 拦截")
+                            Text("公开构建已签名但未公证，必要时复制命令到终端执行。")
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
+                        }
+                        Spacer()
+                        Button(copiedQuarantineCommand ? "已复制" : "复制解除拦截命令") {
+                            NSPasteboard.general.clearContents()
+                            NSPasteboard.general.setString(quarantineCommand, forType: .string)
+                            copiedQuarantineCommand = true
+                        }
+                    }
+                } header: {
+                    Text("下载与安装")
+                } footer: {
+                    Text("手动更新请从 GitHub Release 下载最新 DMG。解除拦截命令只处理本机 quarantine 标记，不会修改应用内容。")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
+
                 HStack(spacing: 30) {
                     Spacer(minLength: 0)
                     Button {
-                        if let url = URL(string: "https://github.com/Superuser-fank/boring-notch-cn") {
-                            NSWorkspace.shared.open(url)
-                        }
+                        NSWorkspace.shared.open(releaseURL.deletingLastPathComponent())
                     } label: {
                         VStack(spacing: 5) {
                             Image("Github")
