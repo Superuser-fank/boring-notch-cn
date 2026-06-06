@@ -26,12 +26,12 @@ struct MusicControllerSelectionView: View {
     
     var body: some View {
         VStack(spacing: 20) {
-            Text("Choose a Music Source")
+            Text("选择音乐来源")
                 .font(.title)
                 .fontWeight(.bold)
                 .padding(.top, 24)
 
-            Text("Select the music source you want to use. You can change this later in the app settings.")
+            Text("选择你想使用的音乐来源。之后也可以在应用设置中修改。")
                 .multilineTextAlignment(.center)
                 .font(.body)
                 .foregroundColor(.secondary)
@@ -56,7 +56,7 @@ struct MusicControllerSelectionView: View {
 
 //            Spacer()
 
-            Button("Continue", action: {
+            Button("继续", action: {
                 self.mediaController = self.selectedMediaController
                 NotificationCenter.default.post(
                     name: Notification.Name.mediaControllerChanged,
@@ -88,16 +88,16 @@ struct ControllerOptionView: View {
                 .animation(.spring(response: 0.3, dampingFraction: 0.6), value: isSelected)
 
             VStack(alignment: .leading, spacing: 4) {
-                Text(LocalizedStringKey(controller.rawValue))
+                Text(controller.displayName)
                     .font(.headline)
                     .fontWeight(.semibold)
 
-                Text(LocalizedStringKey(controller.description))
+                Text(controller.description)
                     .font(.subheadline)
                     .foregroundColor(.secondary)
                 
                 if controller == .youtubeMusic, let url = URL(string: "https://github.com/pear-devs/pear-desktop") {
-                    Link("View on GitHub: pear-devs/pear-desktop", destination: url)
+                    Link("查看 GitHub：pear-devs/pear-desktop", destination: url)
                         .font(.subheadline)
                         .padding(.top, 2)
                 }
@@ -123,15 +123,17 @@ extension MediaControllerType {
     var description: String {
         switch self {
         case .nowPlaying:
-            return "Works with most media apps, including browsers, to detect what's playing. Note: This may be removed in a future macOS version."
+            return "适用于大多数媒体应用和浏览器，用于识别当前播放内容。注意：未来 macOS 版本可能移除此接口。"
         case .spotify:
-            return "Connects directly to the Spotify app."
+            return "直接连接 Spotify 应用。"
         case .appleMusic:
-            return "Connects directly to the Apple Music app."
+            return "直接连接 Apple Music 应用。"
         case .netEaseMusic:
-            return "Uses macOS Now Playing data from NetEase Cloud Music for basic playback controls."
+            return "读取网易云音乐写入的 macOS 正在播放数据，支持基础播放控制。"
+        case .qqMusic:
+            return "读取 QQ 音乐写入的 macOS 正在播放数据，支持基础播放控制。"
         case .youtubeMusic:
-            return "Requires a third-party client with API plugin enabled."
+            return "需要启用 API 插件的第三方客户端。"
         }
     }
 }

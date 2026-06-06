@@ -25,7 +25,7 @@
 
 ## 第三方服务和商标
 
-`网易云音乐`、`Apple Music`、`Spotify`、`YouTube Music` 等名称仅用于说明 Boring Notch CN 可尝试读取或控制的媒体来源。
+`网易云音乐`、`QQ 音乐`、`Apple Music`、`Spotify`、`YouTube Music` 等名称仅用于说明 Boring Notch CN 可尝试读取或控制的媒体来源。
 
 本项目不是上述服务的官方客户端、插件或合作项目；本项目与这些第三方服务及其权利人没有从属、授权、背书或赞助关系。所有相关名称、图标、商标和服务标识归各自权利人所有。
 

@@ -1,8 +1,8 @@
 # Boring Notch CN
 
-Boring Notch CN 是 [Boring Notch](https://github.com/TheBoredTeam/boring.notch) 的公开源码 fork，面向中文用户做了设置页汉化，并增加了网易云音乐作为媒体来源的支持。
+Boring Notch CN 是 [Boring Notch](https://github.com/TheBoredTeam/boring.notch) 的公开源码 fork，面向中文用户做了设置页汉化，并增加了网易云音乐、QQ 音乐作为媒体来源的支持。
 
-本项目不是 TheBoredTeam 官方发布，也不是任何音乐服务的官方客户端、插件或合作项目。`网易云音乐`、`Apple Music`、`Spotify`、`YouTube Music` 等名称仅用于说明兼容的媒体来源；本项目与这些第三方服务没有从属、授权、背书或赞助关系。
+本项目不是 TheBoredTeam 官方发布，也不是任何音乐服务的官方客户端、插件或合作项目。`网易云音乐`、`QQ 音乐`、`Apple Music`、`Spotify`、`YouTube Music` 等名称仅用于说明兼容的媒体来源；本项目与这些第三方服务没有从属、授权、背书或赞助关系。
 
 ## 下载
 
@@ -19,7 +19,9 @@ xattr -dr com.apple.quarantine "/Applications/Boring Notch CN.app"
 ## 主要变化
 
 - 设置页简体中文本地化。
-- 媒体来源增加网易云音乐。
+- 媒体来源增加网易云音乐和 QQ 音乐。
+- 媒体设置页增加诊断卡片，帮助检查播放器运行状态、正在播放数据和控制能力。
+- 通用设置页增加中文安装/权限帮助入口，方便处理 Gatekeeper 和系统权限问题。
 - 保留原版 Boring Notch 的刘海交互、媒体控制、日历、提醒事项、电池、HUD、文件架等能力。
 - Release 包和 App 显示名使用 `Boring Notch CN`，主品牌名不包含第三方服务名称。
 

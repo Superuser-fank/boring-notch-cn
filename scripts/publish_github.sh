@@ -50,7 +50,7 @@ RELEASE_NOTES="$(mktemp)"
 cat > "$RELEASE_NOTES" <<'NOTES'
 ## Boring Notch CN
 
-Boring Notch CN 是 Boring Notch 的公开源码 fork，主品牌名不使用任何第三方服务名称。本版本增加了中文设置本地化，并在媒体来源中提供网易云音乐支持。
+Boring Notch CN 是 Boring Notch 的公开源码 fork，主品牌名不使用任何第三方服务名称。本版本增加了中文设置本地化、媒体诊断、中文安装/权限帮助，并在媒体来源中提供网易云音乐和 QQ 音乐支持。
 
 ### 安装
 
@@ -68,7 +68,7 @@ xattr -dr com.apple.quarantine "/Applications/Boring Notch CN.app"
 - 对应源码：<https://github.com/Superuser-fank/boring-notch-cn/tree/v2.7.3-cn.2>
 - 第三方声明：见 `THIRD_PARTY_NOTICES.md` 和 `THIRD_PARTY_LICENSES`。
 - 这是非官方 fork，不是 TheBoredTeam 官方发布。
-- 网易云音乐、Apple Music、Spotify、YouTube Music 等名称仅用于说明兼容的媒体来源；本项目与这些第三方服务没有从属、授权、背书或赞助关系。
+- 网易云音乐、QQ 音乐、Apple Music、Spotify、YouTube Music 等名称仅用于说明兼容的媒体来源；本项目与这些第三方服务没有从属、授权、背书或赞助关系。
 - 当前 DMG 为 Apple Development 签名，未进行 Developer ID notarization。
 NOTES
 

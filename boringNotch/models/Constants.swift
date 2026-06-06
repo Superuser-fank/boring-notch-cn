@@ -47,9 +47,27 @@ enum MediaControllerType: String, CaseIterable, Identifiable, Defaults.Serializa
     case appleMusic = "Apple Music"
     case spotify = "Spotify"
     case netEaseMusic = "NetEase Cloud Music"
+    case qqMusic = "QQ Music"
     case youtubeMusic = "YouTube Music"
     
     var id: String { self.rawValue }
+
+    var displayName: String {
+        switch self {
+        case .nowPlaying:
+            "正在播放"
+        case .appleMusic:
+            "Apple Music"
+        case .spotify:
+            "Spotify"
+        case .netEaseMusic:
+            "网易云音乐"
+        case .qqMusic:
+            "QQ 音乐"
+        case .youtubeMusic:
+            "YouTube Music"
+        }
+    }
 }
 
 // Sneak peek styles for selection in settings
@@ -58,6 +76,15 @@ enum SneakPeekStyle: String, CaseIterable, Identifiable, Defaults.Serializable {
     case inline = "Inline"
     
     var id: String { self.rawValue }
+
+    var displayName: String {
+        switch self {
+        case .standard:
+            "默认"
+        case .inline:
+            "内联"
+        }
+    }
 }
 
 // Action to perform when Option (⌥) is held while pressing media keys
@@ -67,6 +94,17 @@ enum OptionKeyAction: String, CaseIterable, Identifiable, Defaults.Serializable 
     case none = "No Action"
 
     var id: String { self.rawValue }
+
+    var displayName: String {
+        switch self {
+        case .openSettings:
+            "打开系统设置"
+        case .showHUD:
+            "显示 HUD"
+        case .none:
+            "无操作"
+        }
+    }
 }
 
 extension Defaults.Keys {
