@@ -1,8 +1,8 @@
 # Boring Notch CN
 
-Boring Notch CN 是 [Boring Notch](https://github.com/TheBoredTeam/boring.notch) 的公开源码 fork，面向中文用户做了设置页汉化，并增加了网易云音乐、QQ 音乐、中国日历信息等本地体验优化。
+Boring Notch CN 是 [Boring Notch](https://github.com/TheBoredTeam/boring.notch) 的公开源码 fork，面向中文用户做了设置页汉化，并增加了网易云音乐、QQ 音乐、中国日历信息、国内常用聊天应用快捷投递等本地体验优化。
 
-本项目不是 TheBoredTeam 官方发布，也不是任何音乐服务的官方客户端、插件或合作项目。`网易云音乐`、`QQ 音乐`、`Apple Music`、`Spotify`、`YouTube Music` 等名称仅用于说明兼容的媒体来源；本项目与这些第三方服务没有从属、授权、背书或赞助关系。
+本项目不是 TheBoredTeam 官方发布，也不是任何音乐或聊天服务的官方客户端、插件或合作项目。`网易云音乐`、`QQ 音乐`、`Apple Music`、`Spotify`、`YouTube Music`、`微信`、`QQ`、`钉钉`、`飞书` 等名称仅用于说明兼容的媒体来源或可投递目标；本项目与这些第三方服务没有从属、授权、背书或赞助关系。
 
 ## 下载
 
@@ -23,6 +23,7 @@ xattr -dr com.apple.quarantine "/Applications/Boring Notch CN.app"
 - 媒体设置页增加诊断卡片，帮助检查播放器运行状态、正在播放数据和控制能力。
 - 通用设置页增加中文安装/权限帮助入口，方便处理 Gatekeeper 和系统权限问题。
 - 日历增加中文月份/星期、农历和常见中国节日显示，可在设置页关闭。
+- 文件架快速分享增加微信、QQ、钉钉、飞书快捷投递：会复制到剪贴板并打开对应应用，需要手动选择联系人和发送。
 - 保留原版 Boring Notch 的刘海交互、媒体控制、日历、提醒事项、电池、HUD、文件架等能力。
 - Release 包和 App 显示名使用 `Boring Notch CN`，主品牌名不包含第三方服务名称。
 
@@ -61,7 +62,7 @@ DEVELOPMENT_TEAM=YOURTEAMID UNNOTARIZED=1 ./scripts/build_release.sh
 本项目基于 Boring Notch 修改，继续遵循 GPLv3 发布。
 
 - GPLv3 许可证全文：[LICENSE](./LICENSE)
-- 对应源码：<https://github.com/Superuser-fank/boring-notch-cn/tree/v2.7.3-cn.4>
+- 对应源码：<https://github.com/Superuser-fank/boring-notch-cn/tree/v2.7.3-cn.5>
 - 第三方声明：[THIRD_PARTY_NOTICES.md](./THIRD_PARTY_NOTICES.md)
 - 第三方许可证原文：[THIRD_PARTY_LICENSES](./THIRD_PARTY_LICENSES)
 

@@ -20,7 +20,8 @@ struct FileShareView: View {
     @State private var isProcessing = false
     
     private var selectedProvider: QuickShareProvider {
-        quickShare.availableProviders.first(where: { $0.id == quickShareProvider }) ?? QuickShareProvider(id: "System Share Menu", imageData: nil, supportsRawText: true)
+        quickShare.availableProviders.first(where: { $0.id == quickShareProvider })
+            ?? QuickShareProvider(id: "System Share Menu", imageData: nil, supportsRawText: true, appBundleIdentifier: nil)
     }
 
     var body: some View {
@@ -84,9 +85,15 @@ struct FileShareView: View {
                         .animation(.spring(response: 0.36, dampingFraction: 0.7), value: vm.dropZoneTargeting)
                 }
 
-                Text(selectedProvider.id)
+                Text(selectedProvider.displayName)
                     .font(.system(.headline, design: .rounded))
                     .foregroundColor(.white.opacity(0.8))
+
+                if selectedProvider.usesClipboardHandoff {
+                    Text("复制后打开")
+                        .font(.caption2)
+                        .foregroundColor(Color(white: 0.65))
+                }
 
             }
             .padding(18)

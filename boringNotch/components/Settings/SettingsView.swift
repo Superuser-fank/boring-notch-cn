@@ -987,7 +987,7 @@ struct Shelf: View {
                             }
                             .frame(width: 16, height: 16)
                             .foregroundColor(.accentColor)
-                            Text(provider.id)
+                            Text(provider.displayName)
                         }
                         .tag(provider.id)
                     }
@@ -1008,10 +1008,10 @@ struct Shelf: View {
                         .frame(width: 16, height: 16)
                         .foregroundColor(.accentColor)
                         VStack(alignment: .leading, spacing: 2) {
-                            Text("当前选择：\(selectedProvider.id)")
+                            Text("当前选择：\(selectedProvider.displayName)")
                                 .font(.caption)
                                 .foregroundColor(.secondary)
-                            Text("拖到文件架的文件会通过此服务分享")
+                            Text(selectedProvider.usesClipboardHandoff ? "会复制到剪贴板并打开应用，需要你手动粘贴发送。" : "拖到文件架的文件会通过此服务分享。")
                                 .font(.caption2)
                                 .foregroundColor(.secondary)
                         }
@@ -1025,7 +1025,7 @@ struct Shelf: View {
                     Text("快速分享")
                 }
             } footer: {
-                Text("选择从文件架分享文件时使用的服务。可以点击文件架按钮选择文件，也可以把文件拖到文件架上立即分享。")
+                Text("选择从文件架分享文件时使用的服务。微信、QQ、钉钉、飞书会在本机安装后显示；这类投递会复制到剪贴板并打开应用，不会自动选择联系人或自动发送。")
                     .font(.caption)
                     .foregroundColor(.secondary)
             }

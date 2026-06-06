@@ -14,6 +14,20 @@ struct QuickShareProvider: Identifiable, Hashable, Sendable {
     var id: String
     var imageData: Data?
     var supportsRawText: Bool
+    var appBundleIdentifier: String?
+
+    var usesClipboardHandoff: Bool {
+        appBundleIdentifier != nil
+    }
+
+    var displayName: String {
+        switch id {
+        case "System Share Menu":
+            "系统分享菜单"
+        default:
+            id
+        }
+    }
 }
 
 class QuickShareService: ObservableObject {
@@ -53,7 +67,7 @@ class QuickShareService: ObservableObject {
             let title = svc.title
             let imgData = svc.image.tiffRepresentation
             let supportsRawText = svc.canPerform(withItems: ["Test Text"])
-            let provider = QuickShareProvider(id: title, imageData: imgData, supportsRawText: supportsRawText)
+            let provider = QuickShareProvider(id: title, imageData: imgData, supportsRawText: supportsRawText, appBundleIdentifier: nil)
             if !providers.contains(provider) {
                 providers.append(provider)
                 cachedServices[title] = svc
@@ -65,8 +79,12 @@ class QuickShareService: ObservableObject {
             providers.insert(ad, at: 0)
         }
 
+        for provider in Self.chineseChatAppProviders() where !providers.contains(where: { $0.id == provider.id }) {
+            providers.append(provider)
+        }
+
         if !providers.contains(where: { $0.id == "System Share Menu" }) {
-            providers.append(QuickShareProvider(id: "System Share Menu", imageData: nil, supportsRawText: true))
+            providers.append(QuickShareProvider(id: "System Share Menu", imageData: nil, supportsRawText: true, appBundleIdentifier: nil))
         }
 
         self.availableProviders = providers
@@ -88,8 +106,10 @@ class QuickShareService: ObservableObject {
         panel.allowsMultipleSelection = true
         panel.canChooseDirectories = true
         panel.canChooseFiles = true
-        panel.title = "Select Files for \(provider.id)"
-        panel.message = "Choose files to share via \(provider.id)"
+        panel.title = "选择要分享的文件"
+        panel.message = provider.usesClipboardHandoff
+            ? "文件会复制到剪贴板，并打开 \(provider.id)。"
+            : "选择要通过 \(provider.id) 分享的文件。"
 
         let completion: (NSApplication.ModalResponse) -> Void = { [weak self] response in
             defer {
@@ -117,6 +137,13 @@ class QuickShareService: ObservableObject {
         // Start security-scoped access for all file URLs
         sharingAccessingURLs = fileURLs.filter { $0.startAccessingSecurityScopedResource() }
 
+        if let appBundleIdentifier = provider.appBundleIdentifier {
+            copyToPasteboardAndOpenApp(items, bundleIdentifier: appBundleIdentifier)
+            stopSharingAccessingURLs()
+            SharingStateManager.shared.requestCloseIfReady()
+            return
+        }
+
         // Setup lifecycle delegate to keep notch open during picker/service
         let delegate = SharingStateManager.shared.makeDelegate { [weak self] in
             self?.lifecycleDelegate = nil
@@ -137,6 +164,33 @@ class QuickShareService: ObservableObject {
                 picker.show(relativeTo: .zero, of: view, preferredEdge: .minY)
             }
         }
+    }
+
+    @MainActor
+    private func copyToPasteboardAndOpenApp(_ items: [Any], bundleIdentifier: String) {
+        let pasteboardItems: [NSPasteboardWriting] = items.compactMap { item in
+            if let url = item as? URL {
+                return url as NSURL
+            }
+            if let string = item as? String {
+                return string as NSString
+            }
+            if let string = item as? NSString {
+                return string
+            }
+            return nil
+        }
+
+        if !pasteboardItems.isEmpty {
+            NSPasteboard.general.clearContents()
+            NSPasteboard.general.writeObjects(pasteboardItems)
+        }
+
+        guard let appURL = NSWorkspace.shared.urlForApplication(withBundleIdentifier: bundleIdentifier) else {
+            return
+        }
+        let configuration = NSWorkspace.OpenConfiguration()
+        NSWorkspace.shared.openApplication(at: appURL, configuration: configuration)
     }
 
     private func stopSharingAccessingURLs() {
@@ -195,6 +249,31 @@ private class SharingServiceDelegate: NSObject {}
         print("❌ Failed to resolve bookmark for shelf item")
         return nil
     }
+
+    private static func chineseChatAppProviders() -> [QuickShareProvider] {
+        [
+            chineseChatAppProvider(name: "微信", bundleIdentifiers: ["com.tencent.xinWeChat", "com.tencent.WeChat"]),
+            chineseChatAppProvider(name: "QQ", bundleIdentifiers: ["com.tencent.qq", "com.tencent.QQ"]),
+            chineseChatAppProvider(name: "钉钉", bundleIdentifiers: ["com.alibaba.DingTalkMac", "com.alibaba.DingTalk"]),
+            chineseChatAppProvider(name: "飞书", bundleIdentifiers: ["com.electron.lark", "com.larksuite.Feishu", "com.bytedance.feishu"])
+        ].compactMap { $0 }
+    }
+
+    private static func chineseChatAppProvider(name: String, bundleIdentifiers: [String]) -> QuickShareProvider? {
+        for bundleIdentifier in bundleIdentifiers {
+            guard let appURL = NSWorkspace.shared.urlForApplication(withBundleIdentifier: bundleIdentifier) else {
+                continue
+            }
+            let icon = NSWorkspace.shared.icon(forFile: appURL.path)
+            return QuickShareProvider(
+                id: name,
+                imageData: icon.tiffRepresentation,
+                supportsRawText: true,
+                appBundleIdentifier: bundleIdentifier
+            )
+        }
+        return nil
+    }
 }
 
 // MARK: - App Storage Extension for Provider Selection
@@ -206,6 +285,6 @@ extension QuickShareProvider {
         if let airdrop = svc.availableProviders.first(where: { $0.id == "AirDrop" }) {
             return airdrop
         }
-        return svc.availableProviders.first ?? QuickShareProvider(id: "System Share Menu", imageData: nil, supportsRawText: true)
+        return svc.availableProviders.first ?? QuickShareProvider(id: "System Share Menu", imageData: nil, supportsRawText: true, appBundleIdentifier: nil)
     }
 }
