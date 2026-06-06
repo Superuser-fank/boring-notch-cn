@@ -24,6 +24,7 @@ xattr -dr com.apple.quarantine "/Applications/Boring Notch CN.app"
 - 媒体设置页增加诊断卡片、“复制诊断信息”和中文建议处理步骤，帮助检查播放器运行状态、正在播放数据、控制能力和关键权限状态。
 - 通用设置页增加中文“权限与安装自检”，可查看辅助功能、日历、提醒事项、相机权限状态，并处理 Gatekeeper 拦截。
 - 关于页增加“下载与安装”入口，可打开 GitHub Release 下载页并复制解除 macOS 拦截命令。
+- 状态栏菜单增加 Release 下载页、GitHub 项目和解除拦截命令入口；设置窗口标题改为中文。
 - 首次欢迎页显示中文非官方 fork 说明，避免误认为 TheBoredTeam 官方发布或付费 Pro 版本。
 - 日历增加中文月份/星期、农历、常见中国节日、2026 年中国法定休假和补班提示，可在设置页关闭。
 - 文件架快速分享增加微信、QQ、钉钉、飞书快捷投递，并补充隔空投送、系统分享菜单的中文显示和操作提示；聊天应用投递会复制到剪贴板并打开对应应用，需要手动选择联系人和发送。
@@ -66,7 +67,7 @@ DEVELOPMENT_TEAM=YOURTEAMID UNNOTARIZED=1 ./scripts/build_release.sh
 本项目基于 Boring Notch 修改，继续遵循 GPLv3 发布。
 
 - GPLv3 许可证全文：[LICENSE](./LICENSE)
-- 对应源码：<https://github.com/Superuser-fank/boring-notch-cn/tree/v2.7.3-cn.19>
+- 对应源码：<https://github.com/Superuser-fank/boring-notch-cn/tree/v2.7.3-cn.20>
 - 第三方声明：[THIRD_PARTY_NOTICES.md](./THIRD_PARTY_NOTICES.md)
 - 第三方许可证原文：[THIRD_PARTY_LICENSES](./THIRD_PARTY_LICENSES)
 

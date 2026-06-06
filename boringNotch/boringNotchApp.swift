@@ -19,6 +19,9 @@ struct DynamicNotchApp: App {
     @Environment(\.openWindow) var openWindow
 
     let updaterController: SPUStandardUpdaterController?
+    private let releaseURL = URL(string: "https://github.com/Superuser-fank/boring-notch-cn/releases")!
+    private let sourceURL = URL(string: "https://github.com/Superuser-fank/boring-notch-cn")!
+    private let quarantineCommand = #"xattr -dr com.apple.quarantine "/Applications/Boring Notch CN.app""#
 
     init() {
         if Bundle.main.object(forInfoDictionaryKey: "SUFeedURL") is String {
@@ -42,6 +45,17 @@ struct DynamicNotchApp: App {
             .keyboardShortcut(KeyEquivalent(","), modifiers: .command)
             if let updater = updaterController?.updater {
                 CheckForUpdatesView(updater: updater)
+            }
+            Divider()
+            Button("打开 Release 下载页") {
+                NSWorkspace.shared.open(releaseURL)
+            }
+            Button("打开 GitHub 项目") {
+                NSWorkspace.shared.open(sourceURL)
+            }
+            Button("复制解除拦截命令") {
+                NSPasteboard.general.clearContents()
+                NSPasteboard.general.setString(quarantineCommand, forType: .string)
             }
             Divider()
             Button("重启 Boring Notch CN") {
