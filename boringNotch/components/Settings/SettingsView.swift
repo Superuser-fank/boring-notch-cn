@@ -740,7 +740,7 @@ struct CalendarSettings: View {
             } header: {
                 Text("中国日历")
             } footer: {
-                Text("在刘海日历中显示农历日期和常见中国节日。本地计算不包含法定节假日调休、补班安排。")
+                Text("在刘海日历中显示农历日期、常见中国节日，以及 2026 年中国法定休假和补班提示。")
                     .font(.caption)
                     .foregroundStyle(.secondary)
             }

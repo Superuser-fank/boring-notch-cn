@@ -3,7 +3,7 @@ set -euo pipefail
 
 REPO_NAME="${REPO_NAME:-boring-notch-cn}"
 VISIBILITY="${VISIBILITY:-public}"
-TAG="${TAG:-v2.7.3-cn.5}"
+TAG="${TAG:-v2.7.3-cn.6}"
 BRANCH="${BRANCH:-main}"
 DMG_PATH="${DMG_PATH:-dist/BoringNotchCN-2.7.3-unnotarized.dmg}"
 REMOTE_NAME="${REMOTE_NAME:-publish}"
@@ -50,7 +50,7 @@ RELEASE_NOTES="$(mktemp)"
 cat > "$RELEASE_NOTES" <<'NOTES'
 ## Boring Notch CN
 
-Boring Notch CN 是 Boring Notch 的公开源码 fork，主品牌名不使用任何第三方服务名称。本版本增加了中文设置本地化、媒体诊断、中文安装/权限帮助、网易云音乐和 QQ 音乐支持，补充中文月份/星期、农历和常见中国节日显示，并为文件架快速分享增加微信、QQ、钉钉、飞书快捷投递。
+Boring Notch CN 是 Boring Notch 的公开源码 fork，主品牌名不使用任何第三方服务名称。本版本增加了中文设置本地化、媒体诊断、中文安装/权限帮助、网易云音乐和 QQ 音乐支持，补充中文月份/星期、农历、常见中国节日、2026 年中国法定休假和补班提示，并为文件架快速分享增加微信、QQ、钉钉、飞书快捷投递。
 
 微信、QQ、钉钉、飞书快捷投递会复制内容到剪贴板并打开对应应用，需要用户手动选择联系人和发送，不会自动发送消息。
 
@@ -67,7 +67,7 @@ xattr -dr com.apple.quarantine "/Applications/Boring Notch CN.app"
 ### 开源与合规
 
 - 许可证：GPLv3。完整许可证见 `LICENSE`。
-- 对应源码：<https://github.com/Superuser-fank/boring-notch-cn/tree/v2.7.3-cn.5>
+- 对应源码：<https://github.com/Superuser-fank/boring-notch-cn/tree/v2.7.3-cn.6>
 - 第三方声明：见 `THIRD_PARTY_NOTICES.md` 和 `THIRD_PARTY_LICENSES`。
 - 这是非官方 fork，不是 TheBoredTeam 官方发布。
 - 网易云音乐、QQ 音乐、Apple Music、Spotify、YouTube Music、微信、QQ、钉钉、飞书等名称仅用于说明兼容的媒体来源或可投递目标；本项目与这些第三方服务没有从属、授权、背书或赞助关系。
@@ -75,10 +75,10 @@ xattr -dr com.apple.quarantine "/Applications/Boring Notch CN.app"
 NOTES
 
 if gh release view "$TAG" --repo "$REPO_FULL_NAME" >/dev/null 2>&1; then
-  gh release edit "$TAG" --repo "$REPO_FULL_NAME" --title "Boring Notch CN 2.7.3-cn.5" --notes-file "$RELEASE_NOTES"
+  gh release edit "$TAG" --repo "$REPO_FULL_NAME" --title "Boring Notch CN 2.7.3-cn.6" --notes-file "$RELEASE_NOTES"
   gh release upload "$TAG" "$DMG_PATH" --repo "$REPO_FULL_NAME" --clobber
 else
-  gh release create "$TAG" "$DMG_PATH" --repo "$REPO_FULL_NAME" --title "Boring Notch CN 2.7.3-cn.5" --notes-file "$RELEASE_NOTES"
+  gh release create "$TAG" "$DMG_PATH" --repo "$REPO_FULL_NAME" --title "Boring Notch CN 2.7.3-cn.6" --notes-file "$RELEASE_NOTES"
 fi
 
 echo "Published: https://github.com/$REPO_FULL_NAME/releases/tag/$TAG"

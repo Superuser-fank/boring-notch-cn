@@ -503,7 +503,7 @@ private struct ChineseCalendarInfo {
     }
 
     var holidayName: String? {
-        solarHolidayName ?? lunarHolidayName
+        officialSchedule?.label ?? solarHolidayName ?? lunarHolidayName
     }
 
     var lunarText: String {
@@ -528,6 +528,10 @@ private struct ChineseCalendarInfo {
         default:
             return nil
         }
+    }
+
+    private var officialSchedule: ChinaOfficialHolidaySchedule? {
+        ChinaOfficialHolidaySchedule.schedule(for: date, calendar: Self.gregorianCalendar)
     }
 
     private var lunarHolidayName: String? {
@@ -599,6 +603,74 @@ private struct ChineseCalendarInfo {
         ]
         guard names.indices.contains(day - 1) else { return "\(day)" }
         return names[day - 1]
+    }
+}
+
+private struct ChinaOfficialHolidaySchedule {
+    // 2026 schedule from the State Council General Office notice: 33 holidays, 6 adjusted workdays.
+    enum Kind {
+        case holiday
+        case adjustedWorkday
+    }
+
+    let label: String
+    let kind: Kind
+
+    static func schedule(for date: Date, calendar: Calendar) -> Self? {
+        let components = calendar.dateComponents([.year, .month, .day], from: date)
+        guard let year = components.year, let month = components.month, let day = components.day else {
+            return nil
+        }
+
+        guard year == 2026 else {
+            return nil
+        }
+
+        let monthDay = MonthDay(month: month, day: day)
+        if let holidayLabel = holidayLabels[monthDay] {
+            return Self(label: holidayLabel, kind: .holiday)
+        }
+        if adjustedWorkdays.contains(monthDay) {
+            return Self(label: "补班", kind: .adjustedWorkday)
+        }
+        return nil
+    }
+
+    private static let holidayLabels: [MonthDay: String] = {
+        var labels: [MonthDay: String] = [:]
+        addRange(month: 1, days: 1...3, label: "元旦休", to: &labels)
+        addRange(month: 2, days: 15...23, label: "春节休", to: &labels)
+        addRange(month: 4, days: 4...6, label: "清明休", to: &labels)
+        addRange(month: 5, days: 1...5, label: "劳动休", to: &labels)
+        addRange(month: 6, days: 19...21, label: "端午休", to: &labels)
+        addRange(month: 9, days: 25...27, label: "中秋休", to: &labels)
+        addRange(month: 10, days: 1...7, label: "国庆休", to: &labels)
+        return labels
+    }()
+
+    private static let adjustedWorkdays: Set<MonthDay> = [
+        MonthDay(month: 1, day: 4),
+        MonthDay(month: 2, day: 14),
+        MonthDay(month: 2, day: 28),
+        MonthDay(month: 5, day: 9),
+        MonthDay(month: 9, day: 20),
+        MonthDay(month: 10, day: 10)
+    ]
+
+    private static func addRange(
+        month: Int,
+        days: ClosedRange<Int>,
+        label: String,
+        to labels: inout [MonthDay: String]
+    ) {
+        for day in days {
+            labels[MonthDay(month: month, day: day)] = label
+        }
+    }
+
+    private struct MonthDay: Hashable {
+        let month: Int
+        let day: Int
     }
 }
 
