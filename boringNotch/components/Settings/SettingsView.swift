@@ -1433,10 +1433,10 @@ struct Appearance: View {
                 }
                     .disabled(!checkVideoInput())
                 Picker("镜像形状", selection: $mirrorShape) {
-                    Text("圆形")
-                        .tag(MirrorShapeEnum.circle)
-                    Text("方形")
-                        .tag(MirrorShapeEnum.rectangle)
+                    ForEach([MirrorShapeEnum.circle, MirrorShapeEnum.rectangle], id: \.self) { shape in
+                        Text(shape.displayName)
+                            .tag(shape)
+                    }
                 }
                 Defaults.Toggle(key: .showNotHumanFace) {
                     Text("空闲时显示表情动画")
