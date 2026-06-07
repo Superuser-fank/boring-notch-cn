@@ -1,14 +1,16 @@
 # Boring Notch CN
 
+[![Build Boring Notch CN](https://github.com/Superuser-fank/boring-notch-cn/actions/workflows/cicd.yml/badge.svg)](https://github.com/Superuser-fank/boring-notch-cn/actions/workflows/cicd.yml)
+[![Release](https://img.shields.io/github/v/release/Superuser-fank/boring-notch-cn?display_name=tag&sort=semver)](https://github.com/Superuser-fank/boring-notch-cn/releases)
+[![License: GPLv3](https://img.shields.io/badge/License-GPLv3-blue.svg)](./LICENSE)
+
 Boring Notch CN 是 [Boring Notch](https://github.com/TheBoredTeam/boring.notch) 的公开源码 fork，面向中文用户做了设置页汉化，并增加了网易云音乐、QQ 音乐、中国日历信息、国内常用聊天应用快捷投递等本地体验优化。
 
 本项目不是 TheBoredTeam 官方发布，也不是任何音乐或聊天服务的官方客户端、插件或合作项目。`网易云音乐`、`QQ 音乐`、`Apple Music`、`Spotify`、`YouTube Music`、`微信`、`QQ`、`钉钉`、`飞书` 等名称仅用于说明兼容的媒体来源或可投递目标；本项目与这些第三方服务没有从属、授权、背书或赞助关系。
 
 ## 下载
 
-最新版本请到 GitHub Release 下载：
-
-<https://github.com/Superuser-fank/boring-notch-cn/releases>
+最新版本请到 [GitHub Release](https://github.com/Superuser-fank/boring-notch-cn/releases) 下载。
 
 当前公开构建使用 Apple Development 证书签名，但未进行 Developer ID notarization。首次打开如果被 macOS Gatekeeper 拦截，安装后可以执行：
 
@@ -32,6 +34,12 @@ xattr -dr com.apple.quarantine "/Applications/Boring Notch CN.app"
 - 首次启动引导、更新弹窗、提示卡、菜单栏、刘海快捷菜单、权限授权说明、软件更新、媒体控制布局、媒体来源选项、电池/HUD/下载提示、文件架空状态、文件架操作菜单和图片处理弹窗改为中文。
 - 保留原版 Boring Notch 的刘海交互、媒体控制、日历、提醒事项、电池、HUD、文件架等能力。
 - Release 包和 App 显示名使用 `Boring Notch CN`，主品牌名不包含第三方服务名称。
+
+## 反馈问题
+
+- 普通问题或功能建议：请到 [Issues](https://github.com/Superuser-fank/boring-notch-cn/issues) 按模板提交。
+- 使用前先看 [SUPPORT.md](./SUPPORT.md)，其中列出了安装拦截、权限和媒体来源的常见处理方式。
+- 安全问题请看 [SECURITY.md](./SECURITY.md)，不要在公开 Issue 中直接贴可利用细节。
 
 ## 系统要求
 

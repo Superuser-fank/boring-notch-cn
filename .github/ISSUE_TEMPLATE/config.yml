@@ -1,0 +1,11 @@
+blank_issues_enabled: false
+contact_links:
+  - name: 下载最新版本
+    url: https://github.com/Superuser-fank/boring-notch-cn/releases
+    about: 请从 Release 页面下载正式发布的 DMG。
+  - name: 支持说明
+    url: https://github.com/Superuser-fank/boring-notch-cn/blob/main/SUPPORT.md
+    about: 安装拦截、权限、媒体来源等常见问题先看这里。
+  - name: 安全问题
+    url: https://github.com/Superuser-fank/boring-notch-cn/security/advisories
+    about: 安全问题请优先通过 Security Advisory 私下报告。
