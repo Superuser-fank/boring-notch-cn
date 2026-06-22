@@ -433,7 +433,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         if !Defaults[.showOnAllDisplays] {
             let viewModel = self.vm
             let window = createBoringNotchWindow(
-                for: NSScreen.main ?? NSScreen.screens.first!, with: viewModel)
+                for: preferredNotchScreen(), with: viewModel)
             self.window = window
             adjustWindowPosition(changeAlpha: true)
         } else {
@@ -534,6 +534,12 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             if let preferredScreen = NSScreen.screen(withUUID: coordinator.preferredScreenUUID ?? "") {
                 coordinator.selectedScreenUUID = coordinator.preferredScreenUUID ?? ""
                 selectedScreen = preferredScreen
+            } else if coordinator.firstLaunch,
+                      let notchedScreen = NSScreen.screens.first(where: { $0.safeAreaInsets.top > 0 }),
+                      let notchedUUID = notchedScreen.displayUUID {
+                coordinator.selectedScreenUUID = notchedUUID
+                coordinator.preferredScreenUUID = notchedUUID
+                selectedScreen = notchedScreen
             } else if Defaults[.automaticallySwitchDisplay], let mainScreen = NSScreen.main,
                       let mainUUID = mainScreen.displayUUID {
                 coordinator.selectedScreenUUID = mainUUID
@@ -586,7 +592,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                 backing: .buffered,
                 defer: false
             )
-            window.center()
+            centerOnboardingWindow(window)
             window.title = "Onboarding"
             window.titlebarAppearsTransparent = true
             window.titleVisibility = .hidden
@@ -614,6 +620,37 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         NSApp.activate(ignoringOtherApps: true)
         onboardingWindowController?.window?.makeKeyAndOrderFront(nil)
         onboardingWindowController?.window?.orderFrontRegardless()
+    }
+
+    @MainActor
+    private func preferredNotchScreen() -> NSScreen {
+        if coordinator.firstLaunch,
+           let notchedScreen = NSScreen.screens.first(where: { $0.safeAreaInsets.top > 0 }) {
+            return notchedScreen
+        }
+
+        if let preferredScreen = NSScreen.screen(withUUID: coordinator.preferredScreenUUID ?? "") {
+            return preferredScreen
+        }
+
+        if Defaults[.automaticallySwitchDisplay], let mainScreen = NSScreen.main {
+            return mainScreen
+        }
+
+        return NSScreen.screens.first(where: { $0.safeAreaInsets.top > 0 })
+            ?? NSScreen.main
+            ?? NSScreen.screens.first!
+    }
+
+    @MainActor
+    private func centerOnboardingWindow(_ window: NSWindow) {
+        let screen = preferredNotchScreen()
+        let visibleFrame = screen.visibleFrame
+        let origin = NSPoint(
+            x: visibleFrame.midX - window.frame.width / 2,
+            y: visibleFrame.midY - window.frame.height / 2
+        )
+        window.setFrameOrigin(origin)
     }
 }
 

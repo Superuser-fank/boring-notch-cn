@@ -27,6 +27,7 @@ class MusicManager: ObservableObject {
 
     // Active controller
     private var activeController: (any MediaControllerProtocol)?
+    private var activeControllerType: MediaControllerType?
 
     // Published properties for UI
     @Published var songTitle: String = "I'm Handsome"
@@ -156,25 +157,26 @@ class MusicManager: ObservableObject {
         let preferredType = Defaults[.mediaController]
         print("Preferred Media Controller: \(preferredType)")
 
-        // If NowPlaying is deprecated but that's the preference, use Apple Music instead
         let controllerType = (self.isNowPlayingDeprecated && preferredType == .nowPlaying)
-            ? .appleMusic
+            ? (MediaControllerType.preferredChineseInstalledController ?? .appleMusic)
             : preferredType
 
         if let controller = createController(for: controllerType) {
-            setActiveController(controller)
-        } else if controllerType != .appleMusic, let fallbackController = createController(for: .appleMusic) {
-            // Fallback to Apple Music if preferred controller couldn't be created
-            setActiveController(fallbackController)
+            setActiveController(controller, type: controllerType)
+        } else {
+            activeController = nil
+            activeControllerType = controllerType
+            controllerCancellables.removeAll()
         }
     }
 
-    private func setActiveController(_ controller: any MediaControllerProtocol) {
+    private func setActiveController(_ controller: any MediaControllerProtocol, type: MediaControllerType) {
         // Cancel any existing flip animation
         flipWorkItem?.cancel()
 
         // Set new active controller
         activeController = controller
+        activeControllerType = type
         
         self.canFavoriteTrack = controller.supportsFavorite
 
@@ -599,13 +601,21 @@ class MusicManager: ObservableObject {
     // MARK: - Public Methods for controlling playback
     func playPause() {
         Task {
-            await activeController?.togglePlay()
+            guard let activeController else {
+                await MainActor.run { openMusicApp() }
+                return
+            }
+            await activeController.togglePlay()
         }
     }
 
     func play() {
         Task {
-            await activeController?.play()
+            guard let activeController else {
+                await MainActor.run { openMusicApp() }
+                return
+            }
+            await activeController.play()
         }
     }
 
@@ -629,19 +639,31 @@ class MusicManager: ObservableObject {
     
     func togglePlay() {
         Task {
-            await activeController?.togglePlay()
+            guard let activeController else {
+                await MainActor.run { openMusicApp() }
+                return
+            }
+            await activeController.togglePlay()
         }
     }
 
     func nextTrack() {
         Task {
-            await activeController?.nextTrack()
+            guard let activeController else {
+                await MainActor.run { openMusicApp() }
+                return
+            }
+            await activeController.nextTrack()
         }
     }
 
     func previousTrack() {
         Task {
-            await activeController?.previousTrack()
+            guard let activeController else {
+                await MainActor.run { openMusicApp() }
+                return
+            }
+            await activeController.previousTrack()
         }
     }
 
@@ -663,7 +685,7 @@ class MusicManager: ObservableObject {
         }
     }
     func openMusicApp() {
-        guard let bundleID = bundleIdentifier else {
+        guard let bundleID = preferredOpenBundleIdentifier else {
             print("Error: appBundleIdentifier is nil")
             return
         }
@@ -681,6 +703,15 @@ class MusicManager: ObservableObject {
         } else {
             print("Failed to find app with bundle ID: \(bundleID)")
         }
+    }
+
+    private var preferredOpenBundleIdentifier: String? {
+        if activeControllerType != .nowPlaying,
+           let controllerBundleIdentifier = activeControllerType?.bundleIdentifiers.first {
+            return controllerBundleIdentifier
+        }
+
+        return bundleIdentifier
     }
 
     func forceUpdate() {

@@ -95,7 +95,7 @@ class BoringViewCoordinator: ObservableObject {
         }
     }
 
-    @Published var selectedScreenUUID: String = NSScreen.main?.displayUUID ?? ""
+    @Published var selectedScreenUUID: String = BoringViewCoordinator.defaultScreenUUID ?? ""
 
     @Published var optionKeyPressed: Bool = true
     private var accessibilityObserver: Any?
@@ -117,11 +117,18 @@ class BoringViewCoordinator: ObservableObject {
             // Clear legacy value after migration
             legacyPreferredScreenName = nil
         } else if preferredScreenUUID == nil {
-            // No legacy value, use main screen
-            preferredScreenUUID = NSScreen.main?.displayUUID
+            // On first setup, prefer the physical display that actually has a notch.
+            preferredScreenUUID = Self.defaultScreenUUID
+        } else if firstLaunch,
+                  let notchedScreenUUID = Self.notchedScreenUUID,
+                  let preferredScreen = preferredScreenUUID.flatMap({ NSScreen.screen(withUUID: $0) }),
+                  preferredScreen.safeAreaInsets.top <= 0 {
+            // Older defaults may have captured an external monitor as "main" before
+            // onboarding. First launch should still align the island to the real notch.
+            preferredScreenUUID = notchedScreenUUID
         }
         
-        selectedScreenUUID = preferredScreenUUID ?? NSScreen.main?.displayUUID ?? ""
+        selectedScreenUUID = preferredScreenUUID ?? Self.defaultScreenUUID ?? ""
         // Observe changes to accessibility authorization and react accordingly
         accessibilityObserver = NotificationCenter.default.addObserver(
             forName: Notification.Name.accessibilityAuthorizationChanged,
@@ -173,6 +180,16 @@ class BoringViewCoordinator: ObservableObject {
                 }
             }
         }
+    }
+
+    private static var defaultScreenUUID: String? {
+        notchedScreenUUID ?? NSScreen.main?.displayUUID ?? NSScreen.screens.first?.displayUUID
+    }
+
+    private static var notchedScreenUUID: String? {
+        NSScreen.screens.first { screen in
+            screen.safeAreaInsets.top > 0
+        }?.displayUUID
     }
     
     @objc func sneakPeekEvent(_ notification: Notification) {

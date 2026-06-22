@@ -52,17 +52,26 @@ final class NetEaseMusicController: ObservableObject, MediaControllerProtocol {
     }
 
     func togglePlay() async {
-        guard canControlCurrentTarget else { return }
+        guard canControlCurrentTarget else {
+            openNetEaseMusic()
+            return
+        }
         await nowPlayingController.togglePlay()
     }
 
     func nextTrack() async {
-        guard canControlCurrentTarget else { return }
+        guard canControlCurrentTarget else {
+            openNetEaseMusic()
+            return
+        }
         await nowPlayingController.nextTrack()
     }
 
     func previousTrack() async {
-        guard canControlCurrentTarget else { return }
+        guard canControlCurrentTarget else {
+            openNetEaseMusic()
+            return
+        }
         await nowPlayingController.previousTrack()
     }
 
@@ -116,6 +125,16 @@ final class NetEaseMusicController: ObservableObject, MediaControllerProtocol {
         guard let bundleIdentifier else { return false }
         return bundleIdentifier == Self.netEaseBundleIdentifier
             || bundleIdentifier.hasSuffix(".\(Self.netEaseBundleIdentifier)")
+    }
+
+    private func openNetEaseMusic() {
+        guard let appURL = NSWorkspace.shared.urlForApplication(
+            withBundleIdentifier: Self.netEaseBundleIdentifier
+        ) else {
+            return
+        }
+
+        NSWorkspace.shared.openApplication(at: appURL, configuration: NSWorkspace.OpenConfiguration())
     }
 }
 

@@ -13,7 +13,6 @@ enum OnboardingStep {
     case cameraPermission
     case calendarPermission
     case remindersPermission
-    case accessibilityPermission
     case musicPermission
     case finished
 }
@@ -90,40 +89,18 @@ struct OnboardingView: View {
                             Task {
                                 await requestRemindersPermission()
                                 withAnimation(.easeInOut(duration: 0.6)) {
-                                    step = .accessibilityPermission
+                                    step = .musicPermission
                                 }
                             }
                         },
                         onSkip: {
                             withAnimation(.easeInOut(duration: 0.6)) {
-                                step = .accessibilityPermission
+                                step = .musicPermission
                             }
                         }
                     )
                     .transition(.opacity)
-                
-            case .accessibilityPermission:
-                PermissionRequestView(
-                    icon: Image(systemName: "hand.raised.fill"),
-                    title: "启用辅助功能权限",
-                    description: "替换系统音量、亮度和媒体 HUD 需要辅助功能权限。授权后应用可以监听相关按键事件，并在刘海中显示自定义提示。",
-                    privacyNote: "辅助功能权限只用于改善媒体键和亮度/音量提示，不会收集或分享数据。",
-                    onAllow: {
-                        Task {
-                            await requestAccessibilityPermission()
-                            withAnimation(.easeInOut(duration: 0.6)) {
-                                step = .musicPermission
-                            }
-                        }
-                    },
-                    onSkip: {
-                        withAnimation(.easeInOut(duration: 0.6)) {
-                            step = .musicPermission
-                        }
-                    }
-                )
-                .transition(.opacity)
-                
+
             case .musicPermission:
                 MusicControllerSelectionView(
                     onContinue: {
@@ -154,9 +131,5 @@ struct OnboardingView: View {
 
     func requestRemindersPermission() async {
         _ = try? await calendarService.requestAccess(to: .reminder)
-    }
-    
-    func requestAccessibilityPermission() async {
-        await XPCHelperClient.shared.ensureAccessibilityAuthorization(promptIfNeeded: true)
     }
 }
