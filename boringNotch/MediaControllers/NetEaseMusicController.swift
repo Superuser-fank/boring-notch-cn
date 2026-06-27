@@ -6,6 +6,7 @@
 //
 
 import AppKit
+import ApplicationServices
 import Combine
 import Foundation
 
@@ -21,7 +22,7 @@ final class NetEaseMusicController: ObservableObject, MediaControllerProtocol {
     }
 
     var supportsVolumeControl: Bool { false }
-    var supportsFavorite: Bool { false }
+    var supportsFavorite: Bool { true }
 
     private let nowPlayingController: NowPlayingController
     private var cancellables = Set<AnyCancellable>()
@@ -39,7 +40,35 @@ final class NetEaseMusicController: ObservableObject, MediaControllerProtocol {
             .store(in: &cancellables)
     }
 
-    func setFavorite(_ favorite: Bool) async {}
+    func setFavorite(_ favorite: Bool) async {
+        guard isActive() else {
+            openNetEaseMusic()
+            return
+        }
+
+        let accessibilityTrusted = isAccessibilityTrusted(promptIfNeeded: true)
+        guard accessibilityTrusted else { return }
+        guard let currentFavorite = await fetchFavoriteStateFromMenu() else { return }
+        guard currentFavorite != favorite else { return }
+
+        let script = favorite ? clickFavoriteScript : clickUnfavoriteScript
+
+        do {
+            try await AppleScriptHelper.executeVoid(script)
+        } catch {
+            return
+        }
+
+        try? await Task.sleep(for: .milliseconds(150))
+        let confirmedFavorite = await fetchFavoriteStateFromMenu() ?? favorite
+
+        await MainActor.run {
+            var updatedState = playbackState
+            updatedState.isFavorite = confirmedFavorite
+            updatedState.lastUpdated = Date()
+            playbackState = updatedState
+        }
+    }
 
     func play() async {
         guard canControlCurrentTarget else { return }
@@ -119,6 +148,110 @@ final class NetEaseMusicController: ObservableObject, MediaControllerProtocol {
         normalizedState.bundleIdentifier = Self.netEaseBundleIdentifier
         hasSeenNetEasePlayback = true
         playbackState = normalizedState
+
+        Task { [weak self] in
+            guard let self,
+                  let favoriteState = await self.fetchFavoriteStateFromMenu() else {
+                return
+            }
+
+            await MainActor.run {
+                var updatedState = self.playbackState
+                updatedState.isFavorite = favoriteState
+                updatedState.lastUpdated = Date()
+                self.playbackState = updatedState
+            }
+        }
+    }
+
+    private func fetchFavoriteStateFromMenu() async -> Bool? {
+        guard isActive() else { return nil }
+        guard isAccessibilityTrusted(promptIfNeeded: false) else { return nil }
+
+        let descriptor: NSAppleEventDescriptor
+        do {
+            guard let scriptResult = try await AppleScriptHelper.execute(favoriteStateScript) else { return nil }
+            descriptor = scriptResult
+        } catch {
+            return nil
+        }
+
+        switch descriptor.stringValue {
+        case "favorite":
+            return true
+        case "notFavorite":
+            return false
+        default:
+            return nil
+        }
+    }
+
+    private var clickFavoriteScript: String {
+        """
+        tell application "System Events"
+            tell process "NeteaseMusic"
+                tell menu bar item "控制" of menu bar 1
+                    tell menu 1
+                        if exists menu item "喜欢歌曲" then
+                            click menu item "喜欢歌曲"
+                        else if exists menu item "喜欢" then
+                            click menu item "喜欢"
+                        end if
+                    end tell
+                end tell
+            end tell
+        end tell
+        """
+    }
+
+    private var clickUnfavoriteScript: String {
+        """
+        tell application "System Events"
+            tell process "NeteaseMusic"
+                tell menu bar item "控制" of menu bar 1
+                    tell menu 1
+                        if exists menu item "取消喜欢" then
+                            click menu item "取消喜欢"
+                        else if exists menu item "取消喜欢歌曲" then
+                            click menu item "取消喜欢歌曲"
+                        end if
+                    end tell
+                end tell
+            end tell
+        end tell
+        """
+    }
+
+    private var favoriteStateScript: String {
+        """
+        tell application "System Events"
+            tell process "NeteaseMusic"
+                tell menu bar item "控制" of menu bar 1
+                    tell menu 1
+                        if exists menu item "取消喜欢" then
+                            return "favorite"
+                        else if exists menu item "取消喜欢歌曲" then
+                            return "favorite"
+                        else if exists menu item "喜欢歌曲" then
+                            return "notFavorite"
+                        else if exists menu item "喜欢" then
+                            return "notFavorite"
+                        else
+                            return "unknown"
+                        end if
+                    end tell
+                end tell
+            end tell
+        end tell
+        """
+    }
+
+    private func isAccessibilityTrusted(promptIfNeeded: Bool) -> Bool {
+        let options = [
+            kAXTrustedCheckOptionPrompt.takeUnretainedValue() as String: promptIfNeeded
+        ] as CFDictionary
+
+        return AXIsProcessTrustedWithOptions(options)
     }
 
     private func isNetEaseBundle(_ bundleIdentifier: String?) -> Bool {
