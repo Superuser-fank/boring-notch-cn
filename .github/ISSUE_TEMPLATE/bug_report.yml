@@ -45,7 +45,7 @@ body:
     id: app-version
     attributes:
       label: App 版本
-      placeholder: 例如：v2.7.3-cn.21
+      placeholder: 例如：v2.7.3-cn.23
     validations:
       required: true
   - type: input
